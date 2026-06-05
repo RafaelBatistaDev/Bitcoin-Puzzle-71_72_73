@@ -1,0 +1,98 @@
+#!/usr/bin/env node
+
+/**
+ * TESTE: Verificar se cada solver está consultando a rede correta
+ * 
+ * Este script testa se:
+ * - Ethereum solver consulta RPC_ENDPOINT (Ethereum)
+ * - Polygon solver consulta POLYGON_RPC_ENDPOINT (Polygon)
+ * - BNB solver consulta BNB_RPC_ENDPOINT (BNB Chain)
+ * - Solana solver consulta SOL_RPC_ENDPOINT (Solana)
+ * - Bitcoin solver consulta ANKR_BTC_BLOCKBOOK_URL (Bitcoin Blockbook)
+ */
+
+import { RUNTIME_CONFIG as ETH_CONFIG } from './ethereum/config/config.js';
+import { RUNTIME_CONFIG as POLYGON_CONFIG } from './polygon/config/config.js';
+import { RUNTIME_CONFIG as BNB_CONFIG } from './bnb/config/config.js';
+import { RUNTIME_CONFIG as SOLANA_CONFIG } from './solana/config/config.js';
+import { BLOCKBOOK_CONFIG as BTC_CONFIG } from './bitcoin/config/config.js';
+
+console.log('\n🧪 TESTE: Cada Solver Consulta a Rede Correta\n');
+console.log('═'.repeat(70));
+
+// Teste 1: Ethereum
+console.log('\n✅ ETHEREUM Solver:');
+console.log(`   RPC Endpoint: ${ETH_CONFIG.RPC_ENDPOINT}`);
+console.log(`   Contém "eth"? ${ETH_CONFIG.RPC_ENDPOINT.includes('eth') ? '✅ SIM' : '❌ NÃO'}`);
+console.log(`   Target: ${ETH_CONFIG.RPC_ENDPOINT.includes('ankr') ? '🔗 Ankr' : '🔗 Outro'}`);
+
+// Teste 2: Polygon
+console.log('\n✅ POLYGON Solver:');
+console.log(`   RPC Endpoint: ${POLYGON_CONFIG.RPC_ENDPOINT}`);
+console.log(`   Contém "polygon"? ${POLYGON_CONFIG.RPC_ENDPOINT.includes('polygon') ? '✅ SIM' : '❌ NÃO'}`);
+console.log(`   API Key: ${POLYGON_CONFIG.ETHERSCAN_KEY}`);
+console.log(`   API contém "polygon"? ${POLYGON_CONFIG.ETHERSCAN_KEY.includes('polygon') ? '✅ SIM' : '❌ NÃO'}`);
+
+// Teste 3: BNB
+console.log('\n✅ BNB Solver:');
+console.log(`   RPC Endpoint: ${BNB_CONFIG.RPC_ENDPOINT}`);
+console.log(`   Contém "bsc" ou "bnb"? ${(BNB_CONFIG.RPC_ENDPOINT.includes('bsc') || BNB_CONFIG.RPC_ENDPOINT.includes('bnb')) ? '✅ SIM' : '❌ NÃO'}`);
+console.log(`   API Key: ${BNB_CONFIG.ETHERSCAN_KEY}`);
+console.log(`   API contém "bsc"? ${BNB_CONFIG.ETHERSCAN_KEY.includes('bsc') ? '✅ SIM' : '❌ NÃO'}`);
+
+// Teste 4: Solana
+console.log('\n✅ SOLANA Solver:');
+console.log(`   RPC Endpoint: ${SOLANA_CONFIG.RPC_ENDPOINT}`);
+console.log(`   Contém "solana"? ${SOLANA_CONFIG.RPC_ENDPOINT.includes('solana') ? '✅ SIM' : '❌ NÃO'}`);
+console.log(`   Target: ${SOLANA_CONFIG.RPC_ENDPOINT.includes('ankr') ? '🔗 Ankr' : '🔗 Outro'}`);
+
+// Teste 5: Bitcoin
+console.log('\n✅ BITCOIN Solver:');
+console.log(`   Blockbook URL: ${BTC_CONFIG.API_URL}`);
+console.log(`   Contém "blockbook_btc"? ${BTC_CONFIG.API_URL.includes('blockbook_btc') ? '✅ SIM' : '❌ NÃO'}`);
+console.log(`   Target: ${BTC_CONFIG.API_URL.includes('ankr') ? '🔗 Ankr' : '🔗 Outro'}`);
+
+console.log('\n' + '═'.repeat(70));
+
+// Validação Final
+console.log('\n📊 RESUMO FINAL:');
+
+const checks = [
+  {
+    name: 'Ethereum',
+    pass: ETH_CONFIG.RPC_ENDPOINT.includes('eth') && ETH_CONFIG.RPC_ENDPOINT.includes('ankr'),
+  },
+  {
+    name: 'Polygon',
+    pass: POLYGON_CONFIG.RPC_ENDPOINT.includes('polygon') && POLYGON_CONFIG.ETHERSCAN_KEY.includes('polygon'),
+  },
+  {
+    name: 'BNB',
+    pass: (BNB_CONFIG.RPC_ENDPOINT.includes('bsc') || BNB_CONFIG.RPC_ENDPOINT.includes('bnb')) && BNB_CONFIG.ETHERSCAN_KEY.includes('bsc'),
+  },
+  {
+    name: 'Solana',
+    pass: SOLANA_CONFIG.RPC_ENDPOINT.includes('solana') && SOLANA_CONFIG.RPC_ENDPOINT.includes('ankr'),
+  },
+  {
+    name: 'Bitcoin',
+    pass: BTC_CONFIG.API_URL.includes('blockbook_btc') && BTC_CONFIG.API_URL.includes('ankr'),
+  },
+];
+
+let allPassed = true;
+checks.forEach(check => {
+  const status = check.pass ? '✅' : '❌';
+  console.log(`${status} ${check.name}: ${check.pass ? 'CORRETO' : 'ERRO'}`);
+  if (!check.pass) allPassed = false;
+});
+
+console.log('\n' + '═'.repeat(70));
+
+if (allPassed) {
+  console.log('\n🎉 SUCESSO! Todos os solvers estão consultando a rede correta!\n');
+  process.exit(0);
+} else {
+  console.log('\n❌ ERRO! Alguns solvers não estão consultando a rede correta!\n');
+  process.exit(1);
+}

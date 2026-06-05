@@ -1,5 +1,15 @@
 # 🚀 QUICK START - Todos os Comandos
 
+https://www.ankr.com/rpc/eth
+
+https://www.ankr.com/rpc/solana
+
+https://www.ankr.com/rpc/btc
+
+https://www.ankr.com/rpc/bsc
+
+https://www.ankr.com/rpc/polygon
+
 ## 📋 Índice
 1. [Rodar Solvers](#rodar-solvers)
 2. [Verificar Resultados](#verificar-resultados)

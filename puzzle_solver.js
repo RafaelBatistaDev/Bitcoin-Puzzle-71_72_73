@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-
+// ✅ Carregar e validar todas as configurações do .env (centralizado)
+import config from './config.js';
 /**
  * PROJETO: BTC PUZZLE - Solver Simplificado
  * PERFORMANCE: Alta
