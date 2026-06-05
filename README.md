@@ -1,4 +1,4 @@
-# Bitcoin + Ethereum Puzzle Solver v4.0 - High-Performance Modular Architecture
+# Bitcoin + Ethereum + Solana + BNB + Polygon Puzzle Solver v4.0 - High-Performance Modular Architecture
 
 # Chaves de API
 https://www.ankr.com/rpc
@@ -9,6 +9,34 @@ toolbox enter puzzle-solver
 
 # Executar baixar dependençias
 ./setup_toolbox.sh
+
+# QuickStart
+./quickstart.sh
+
+## 🎯 Rodar Solvers
+
+### **OPÇÃO 1: Rodar todos os 5 networks em paralelo (RECOMENDADO)**
+```bash
+./run_all_networks.sh
+```
+✅ Executa Bitcoin + Ethereum + Solana + Polygon + BNB  
+✅ 15 puzzles (3×5) rodando ao mesmo tempo  
+✅ Gera `batch_history.jsonl` em cada `PUZZLE_*`  
+⏱️ Tempo: ~1-2 horas (depende da velocidade do RPC e CPU)
+
+---
+
+## ✅ Verificar Resultados
+
+### **OPÇÃO 1: Verificar todos os 5 networks (RECOMENDADO)**
+```bash
+uv run check_all_networks.py
+```
+✅ Extrai endereços com saldo dos 5 networks  
+✅ Gera 5 arquivos individuais + 1 consolidado  
+✅ Output: `relatorio_final/`
+
+
 
 # rodar scripts de procura 
 
