@@ -97,6 +97,39 @@ function isValidUrl(url, fieldName) {
 }
 
 /**
+ * Valida se uma chave API é válida (não vazia e não contém placeholders)
+ */
+function isValidApiKey(key, fieldName) {
+  if (!key || typeof key !== 'string') {
+    return {
+      valid: false,
+      error: `[ERRO] ${fieldName} está vazia ou undefined`,
+    };
+  }
+
+  if (
+    key.includes('YOUR_API_KEY') ||
+    key.includes('your_api_key') ||
+    key.includes('YOUR_KEY') ||
+    key.includes('your_key') ||
+    key.includes('YourApiKeyToken') ||
+    key.includes('SUBSTITUIR') ||
+    key.includes('COLOQUE') ||
+    key.includes('CONFIGURE') ||
+    key.includes('{}') ||
+    key.includes('{{}}') ||
+    key === ''
+  ) {
+    return {
+      valid: false,
+      error: `[ERRO] ${fieldName} contém placeholder ou é inválida: "${key}"`,
+    };
+  }
+
+  return { valid: true };
+}
+
+/**
  * Valida se um número inteiro é válido
  */
 function isValidInteger(value, fieldName, min = 0) {
@@ -206,31 +239,42 @@ export function validateConfig() {
   // ========================================
   // BITCOIN CONFIGURATION
   // ========================================
-  const btcUrl = isValidUrl(
-    process.env.ANKR_BTC_BLOCKBOOK_URL,
-    'ANKR_BTC_BLOCKBOOK_URL'
-  );
-  if (!btcUrl.valid) errors.push(btcUrl.error);
+  if (process.env.ANKR_BTC_BLOCKBOOK_URL) {
+    const btcUrl = isValidUrl(
+      process.env.ANKR_BTC_BLOCKBOOK_URL,
+      'ANKR_BTC_BLOCKBOOK_URL'
+    );
+    if (!btcUrl.valid) errors.push(btcUrl.error);
+  }
 
-  const BLOCKBOOK_DELAY_MS = isValidInteger(
-    process.env.BLOCKBOOK_DELAY_MS,
-    'BLOCKBOOK_DELAY_MS',
-    0
-  );
-  if (!BLOCKBOOK_DELAY_MS.valid) errors.push(BLOCKBOOK_DELAY_MS.error);
+  if (process.env.BLOCKBOOK_DELAY_MS) {
+    const BLOCKBOOK_DELAY_MS = isValidInteger(
+      process.env.BLOCKBOOK_DELAY_MS,
+      'BLOCKBOOK_DELAY_MS',
+      0
+    );
+    if (!BLOCKBOOK_DELAY_MS.valid) errors.push(BLOCKBOOK_DELAY_MS.error);
+  }
 
-  const BLOCKBOOK_TIMEOUT_MS = isValidInteger(
-    process.env.BLOCKBOOK_TIMEOUT_MS,
-    'BLOCKBOOK_TIMEOUT_MS',
-    1
-  );
-  if (!BLOCKBOOK_TIMEOUT_MS.valid) errors.push(BLOCKBOOK_TIMEOUT_MS.error);
+  if (process.env.BLOCKBOOK_TIMEOUT_MS) {
+    const BLOCKBOOK_TIMEOUT_MS = isValidInteger(
+      process.env.BLOCKBOOK_TIMEOUT_MS,
+      'BLOCKBOOK_TIMEOUT_MS',
+      1
+    );
+    if (!BLOCKBOOK_TIMEOUT_MS.valid) errors.push(BLOCKBOOK_TIMEOUT_MS.error);
+  }
 
   // ========================================
   // ETHEREUM CONFIGURATION
   // ========================================
   const ethUrl = isValidUrl(process.env.RPC_ENDPOINT, 'RPC_ENDPOINT (Ethereum)');
   if (!ethUrl.valid) errors.push(ethUrl.error);
+
+  if (process.env.ETHERSCAN_KEY && process.env.ETHERSCAN_KEY !== 'YourApiKeyToken') {
+    const ethKey = isValidApiKey(process.env.ETHERSCAN_KEY, 'ETHERSCAN_KEY');
+    if (!ethKey.valid) errors.push(ethKey.error);
+  }
 
   const ETH_TARGET_71 = isValidAddress(
     process.env.ETH_TARGET_71,
@@ -252,6 +296,15 @@ export function validateConfig() {
     'ethereum'
   );
   if (!ETH_TARGET_73.valid) errors.push(ETH_TARGET_73.error);
+
+  const ETH_DELAY_MS = isValidInteger(process.env.ETH_DELAY_MS || '200', 'ETH_DELAY_MS', 0);
+  if (!ETH_DELAY_MS.valid) errors.push(ETH_DELAY_MS.error);
+
+  const ETH_INITIAL_DELAY_MS = isValidInteger(process.env.ETH_INITIAL_DELAY_MS || '0', 'ETH_INITIAL_DELAY_MS', 0);
+  if (!ETH_INITIAL_DELAY_MS.valid) errors.push(ETH_INITIAL_DELAY_MS.error);
+
+  const ETH_MAX_REQ_24H = isValidInteger(process.env.ETH_MAX_REQ_24H || '100000', 'ETH_MAX_REQ_24H', 1);
+  if (!ETH_MAX_REQ_24H.valid) errors.push(ETH_MAX_REQ_24H.error);
 
   // ========================================
   // SOLANA CONFIGURATION
@@ -326,6 +379,11 @@ export function validateConfig() {
   const bnbUrl = isValidUrl(process.env.BNB_RPC_ENDPOINT, 'BNB_RPC_ENDPOINT');
   if (!bnbUrl.valid) errors.push(bnbUrl.error);
 
+  if (process.env.BSCSCAN_KEY && process.env.BSCSCAN_KEY !== 'YourApiKeyToken') {
+    const bnbKey = isValidApiKey(process.env.BSCSCAN_KEY, 'BSCSCAN_KEY');
+    if (!bnbKey.valid) errors.push(bnbKey.error);
+  }
+
   const BNB_TARGET_71 = isValidAddress(
     process.env.BNB_TARGET_71,
     'BNB_TARGET_71',
@@ -346,6 +404,15 @@ export function validateConfig() {
     'bnb'
   );
   if (!BNB_TARGET_73.valid) errors.push(BNB_TARGET_73.error);
+
+  const BNB_DELAY_MS = isValidInteger(process.env.BNB_DELAY_MS || '200', 'BNB_DELAY_MS', 0);
+  if (!BNB_DELAY_MS.valid) errors.push(BNB_DELAY_MS.error);
+
+  const BNB_INITIAL_DELAY_MS = isValidInteger(process.env.BNB_INITIAL_DELAY_MS || '100', 'BNB_INITIAL_DELAY_MS', 0);
+  if (!BNB_INITIAL_DELAY_MS.valid) errors.push(BNB_INITIAL_DELAY_MS.error);
+
+  const BNB_MAX_REQ_24H = isValidInteger(process.env.BNB_MAX_REQ_24H || '100000', 'BNB_MAX_REQ_24H', 1);
+  if (!BNB_MAX_REQ_24H.valid) errors.push(BNB_MAX_REQ_24H.error);
 
   // ========================================
   // RELATÓRIO FINAL
@@ -379,8 +446,8 @@ export function getConfig() {
 
     // Bitcoin
     ANKR_BTC_BLOCKBOOK_URL: process.env.ANKR_BTC_BLOCKBOOK_URL,
-    BLOCKBOOK_DELAY_MS: parseInt(process.env.BLOCKBOOK_DELAY_MS, 10),
-    BLOCKBOOK_TIMEOUT_MS: parseInt(process.env.BLOCKBOOK_TIMEOUT_MS, 10),
+    BLOCKBOOK_DELAY_MS: parseInt(process.env.BLOCKBOOK_DELAY_MS || '0', 10),
+    BLOCKBOOK_TIMEOUT_MS: parseInt(process.env.BLOCKBOOK_TIMEOUT_MS || '10000', 10),
 
     // Ethereum
     RPC_ENDPOINT: process.env.RPC_ENDPOINT,
@@ -388,6 +455,9 @@ export function getConfig() {
     ETH_TARGET_71: process.env.ETH_TARGET_71,
     ETH_TARGET_72: process.env.ETH_TARGET_72,
     ETH_TARGET_73: process.env.ETH_TARGET_73,
+    ETH_DELAY_MS: parseInt(process.env.ETH_DELAY_MS || '200', 10),
+    ETH_INITIAL_DELAY_MS: parseInt(process.env.ETH_INITIAL_DELAY_MS || '0', 10),
+    ETH_MAX_REQ_24H: parseInt(process.env.ETH_MAX_REQ_24H || '100000', 10),
 
     // Solana
     SOL_RPC_ENDPOINT: process.env.SOL_RPC_ENDPOINT,
@@ -408,11 +478,13 @@ export function getConfig() {
 
     // BNB
     BNB_RPC_ENDPOINT: process.env.BNB_RPC_ENDPOINT,
-    BNB_API_KEY: process.env.BNB_API_KEY,
+    BSCSCAN_KEY: process.env.BSCSCAN_KEY,
     BNB_TARGET_71: process.env.BNB_TARGET_71,
     BNB_TARGET_72: process.env.BNB_TARGET_72,
     BNB_TARGET_73: process.env.BNB_TARGET_73,
-    BNB_DELAY_MS: parseInt(process.env.BNB_DELAY_MS, 10),
+    BNB_DELAY_MS: parseInt(process.env.BNB_DELAY_MS || '200', 10),
+    BNB_INITIAL_DELAY_MS: parseInt(process.env.BNB_INITIAL_DELAY_MS || '100', 10),
+    BNB_MAX_REQ_24H: parseInt(process.env.BNB_MAX_REQ_24H || '100000', 10),
     BNB_TIMEOUT_MS: parseInt(process.env.BNB_TIMEOUT_MS, 10),
   };
 }

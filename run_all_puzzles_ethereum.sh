@@ -26,18 +26,20 @@ if [ -f ".env" ]; then
 fi
 
 export SEARCH_MODE="${SEARCH_MODE:-sequential}"
+export ETH_DELAY_MS=2500
+echo "⏱️  Delay do Ethereum ajustado para 2.5s para execução paralela segura"
 
 echo "🔍 Ethereum: P71 P72 P73 (${SEARCH_MODE})"
 
 (PUZZLE_ID=71 node ethereum/config/solver.js) &
 PID71=$!
 
-sleep 7
+sleep 20
 
 (PUZZLE_ID=72 node ethereum/config/solver.js) &
 PID72=$!
 
-sleep 7
+sleep 20
 
 (PUZZLE_ID=73 node ethereum/config/solver.js) &
 PID73=$!

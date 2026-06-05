@@ -40,7 +40,9 @@ function loadEnvFile() {
 
     if (trimmedKey && value) {
       const cleanValue = value.replace(/^["']|["']$/g, '');
-      process.env[trimmedKey] = cleanValue;
+      if (process.env[trimmedKey] === undefined) {
+        process.env[trimmedKey] = cleanValue;
+      }
     }
   });
 }
@@ -62,6 +64,17 @@ function isValidUrl(url, fieldName) {
     new URL(url);
   } catch (e) {
     throw new Error(`❌ ${fieldName} não é uma URL válida: "${url}"`);
+  }
+}
+
+function isValidApiKey(key, fieldName) {
+  if (!key || typeof key !== 'string') {
+    throw new Error(`❌ ${fieldName} está vazia ou undefined`);
+  }
+
+  const placeholders = ['YOUR_API_KEY', 'your_api_key', 'YOUR_KEY', 'YourApiKeyToken', 'SUBSTITUIR', 'COLOQUE', 'CONFIGURE', '{}', '{{}}'];
+  if (placeholders.some(p => key.includes(p)) || key === '') {
+    throw new Error(`❌ ${fieldName} contém placeholder ou é inválida: "${key}"`);
   }
 }
 
@@ -118,19 +131,24 @@ function initializeConfig() {
       throw new Error(`❌ SEARCH_MODE deve ser 'sequential', recebido: "${SEARCH_MODE}"`);
     }
 
-    // Validar Bitcoin
-    isValidUrl(process.env.ANKR_BTC_BLOCKBOOK_URL, 'ANKR_BTC_BLOCKBOOK_URL');
-    const BLOCKBOOK_DELAY_MS = isValidInteger(process.env.BLOCKBOOK_DELAY_MS, 'BLOCKBOOK_DELAY_MS', 0);
-    const BLOCKBOOK_TIMEOUT_MS = isValidInteger(process.env.BLOCKBOOK_TIMEOUT_MS, 'BLOCKBOOK_TIMEOUT_MS', 1);
+    // Validar Bitcoin (opcional)
+    if (process.env.ANKR_BTC_BLOCKBOOK_URL) {
+      isValidUrl(process.env.ANKR_BTC_BLOCKBOOK_URL, 'ANKR_BTC_BLOCKBOOK_URL');
+    }
+    const BLOCKBOOK_DELAY_MS = process.env.BLOCKBOOK_DELAY_MS ? isValidInteger(process.env.BLOCKBOOK_DELAY_MS, 'BLOCKBOOK_DELAY_MS', 0) : 0;
+    const BLOCKBOOK_TIMEOUT_MS = process.env.BLOCKBOOK_TIMEOUT_MS ? isValidInteger(process.env.BLOCKBOOK_TIMEOUT_MS, 'BLOCKBOOK_TIMEOUT_MS', 1) : 10000;
 
     // Validar Ethereum
     isValidUrl(process.env.RPC_ENDPOINT, 'RPC_ENDPOINT (Ethereum)');
     if (process.env.ETHERSCAN_KEY && process.env.ETHERSCAN_KEY !== 'YourApiKeyToken') {
-      isValidUrl(process.env.ETHERSCAN_KEY, 'ETHERSCAN_KEY');
+      isValidApiKey(process.env.ETHERSCAN_KEY, 'ETHERSCAN_KEY');
     }
     isValidAddress(process.env.ETH_TARGET_71, 'ETH_TARGET_71', 'ethereum');
     isValidAddress(process.env.ETH_TARGET_72, 'ETH_TARGET_72', 'ethereum');
     isValidAddress(process.env.ETH_TARGET_73, 'ETH_TARGET_73', 'ethereum');
+    const ETH_DELAY_MS = isValidInteger(process.env.ETH_DELAY_MS || '200', 'ETH_DELAY_MS', 0);
+    const ETH_INITIAL_DELAY_MS = isValidInteger(process.env.ETH_INITIAL_DELAY_MS || '0', 'ETH_INITIAL_DELAY_MS', 0);
+    const ETH_MAX_REQ_24H = isValidInteger(process.env.ETH_MAX_REQ_24H || '100000', 'ETH_MAX_REQ_24H', 1);
 
     // Validar Solana
     isValidUrl(process.env.SOL_RPC_ENDPOINT, 'SOL_RPC_ENDPOINT');
@@ -152,12 +170,15 @@ function initializeConfig() {
 
     // Validar BNB
     isValidUrl(process.env.BNB_RPC_ENDPOINT, 'BNB_RPC_ENDPOINT');
-    // ✅ VALIDAR BNB_API_KEY (obrigatória para queries avançadas)
-    isValidUrl(process.env.BNB_API_KEY, 'BNB_API_KEY');
+    if (process.env.BSCSCAN_KEY && process.env.BSCSCAN_KEY !== 'YourApiKeyToken') {
+      isValidApiKey(process.env.BSCSCAN_KEY, 'BSCSCAN_KEY');
+    }
     isValidAddress(process.env.BNB_TARGET_71, 'BNB_TARGET_71', 'bnb');
     isValidAddress(process.env.BNB_TARGET_72, 'BNB_TARGET_72', 'bnb');
     isValidAddress(process.env.BNB_TARGET_73, 'BNB_TARGET_73', 'bnb');
-    const BNB_DELAY_MS = isValidInteger(process.env.BNB_DELAY_MS, 'BNB_DELAY_MS', 0);
+    const BNB_DELAY_MS = isValidInteger(process.env.BNB_DELAY_MS || '200', 'BNB_DELAY_MS', 0);
+    const BNB_INITIAL_DELAY_MS = isValidInteger(process.env.BNB_INITIAL_DELAY_MS || '100', 'BNB_INITIAL_DELAY_MS', 0);
+    const BNB_MAX_REQ_24H = isValidInteger(process.env.BNB_MAX_REQ_24H || '100000', 'BNB_MAX_REQ_24H', 1);
     const BNB_TIMEOUT_MS = isValidInteger(process.env.BNB_TIMEOUT_MS, 'BNB_TIMEOUT_MS', 1);
 
     console.log('✅ Configuração carregada e validada com sucesso!\n');
@@ -185,6 +206,9 @@ function initializeConfig() {
       ETH_TARGET_71: process.env.ETH_TARGET_71,
       ETH_TARGET_72: process.env.ETH_TARGET_72,
       ETH_TARGET_73: process.env.ETH_TARGET_73,
+      ETH_DELAY_MS,
+      ETH_INITIAL_DELAY_MS,
+      ETH_MAX_REQ_24H,
       
       // Solana
       SOL_RPC_ENDPOINT: process.env.SOL_RPC_ENDPOINT,
@@ -205,11 +229,13 @@ function initializeConfig() {
       
       // BNB
       BNB_RPC_ENDPOINT: process.env.BNB_RPC_ENDPOINT,
-      BNB_API_KEY: process.env.BNB_API_KEY,
+      BSCSCAN_KEY: process.env.BSCSCAN_KEY,
       BNB_TARGET_71: process.env.BNB_TARGET_71,
       BNB_TARGET_72: process.env.BNB_TARGET_72,
       BNB_TARGET_73: process.env.BNB_TARGET_73,
       BNB_DELAY_MS,
+      BNB_INITIAL_DELAY_MS,
+      BNB_MAX_REQ_24H,
       BNB_TIMEOUT_MS,
     };
   } catch (error) {

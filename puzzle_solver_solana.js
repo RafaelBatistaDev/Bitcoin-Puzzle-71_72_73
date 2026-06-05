@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// --- MONKEYPATCH: bigint-buffer para Solana (DEVE SER PRIMEIRA LINHA) ---
+import './monkeypatch-bigint-buffer.js';
+
 // ✅ Carregar e validar todas as configurações do .env (centralizado)
 import config from './config.js';
 

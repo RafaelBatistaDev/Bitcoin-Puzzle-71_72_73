@@ -1,38 +1,13 @@
 {
-  "name": "bitcoin-puzzle72-solver",
+  "name": "recifecrypto-puzzle-72",
   "version": "1.0.0",
-  "description": "Bitcoin Puzzle #72 Random Search Solver - JavaScript/Node.js",
-  "main": "puzzle_solver.js",
   "type": "module",
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10.0.0"
-  },
-  "scripts": {
-    "start": "node puzzle_solver.js",
-    "dev": "node --watch puzzle_solver.js",
-    "test": "node puzzle_solver.js --test",
-    "candidates": "ls -lah candidates/ && echo '---' && head -20 candidates/candidates_*.txt | tail -30",
-    "audit:safe": "npm audit --audit-level=moderate"
-  },
-  "keywords": [
-    "bitcoin",
-    "puzzle",
-    "ecdsa",
-    "cryptography",
-    "secp256k1",
-    "blockchain"
-  ],
-  "author": "recifecrypto",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/recifecrypto/puzzle72-solver"
-  },
   "dependencies": {
-    "axios": "^1.7.9",
+    "@solana/spl-token": "^0.4.12",
+    "@solana/web3.js": "^1.95.3",
+    "axios": "^1.7.4",
     "bs58": "^6.0.0",
-    "elliptic": "^6.6.1",
+    "elliptic": "^6.5.7",
     "js-sha256": "^0.11.1",
     "sha3": "^2.1.4",
     "tweetnacl": "^1.0.3",
@@ -40,12 +15,11 @@
     "web3-utils": "^4.3.3"
   },
   "overrides": {
-    "elliptic": "$elliptic"
-  },
-  "preferGlobal": false,
-  "os": [
-    "linux",
-    "darwin",
-    "win32"
-  ]
+    "@solana/buffer-layout-utils": {
+      "bigint-buffer": "1.1.5"
+    },
+    "uuid": "^11.1.1",
+    "axios": "^1.7.4",
+    "elliptic": "^6.5.7"
+  }
 }

@@ -15,14 +15,34 @@ toolbox enter puzzle-solver
 
 ## 🎯 Rodar Solvers
 
-### **OPÇÃO 1: Rodar todos os 5 networks em paralelo (RECOMENDADO)**
+### **OPÇÃO 1: Rodar todos os 5 networks (Todos os Puzzles 71, 72, 73 em paralelo)**
 ```bash
-./run_all_networks.sh
+./run_all_networks_all_puzzles.sh
 ```
 ✅ Executa Bitcoin + Ethereum + Solana + Polygon + BNB  
 ✅ 15 puzzles (3×5) rodando ao mesmo tempo  
 ✅ Gera `batch_history.jsonl` em cada `PUZZLE_*`  
 ⏱️ Tempo: ~1-2 horas (depende da velocidade do RPC e CPU)
+
+---
+
+### **OPÇÃO 2: Rodar todos os 5 networks em paralelo (Puzzles Específicos)**
+Para rodar apenas um puzzle específico em todas as 5 redes simultaneamente:
+
+#### Rodar apenas o Puzzle 71 nas 5 redes
+```bash
+./run_all_networks_puzzle71.sh
+```
+
+#### Rodar apenas o Puzzle 72 nas 5 redes
+```bash
+./run_all_networks_puzzle72.sh
+```
+
+#### Rodar apenas o Puzzle 73 nas 5 redes
+```bash
+./run_all_networks_puzzle73.sh
+```
 
 ---
 
@@ -100,46 +120,68 @@ Fully restructured with **centralized balance verification**, environment config
 
 ```
 2--71-72-73/
-├── bitcoin/
-│   ├── cache/                    # Bitcoin state files (puzzle_71.json, etc.)
-│   ├── PUZZLE_71/                # Puzzle 71 results
-│   │   └── batch_history.jsonl   # All checked addresses (JSON-L format)
-│   ├── PUZZLE_72/                # Puzzle 72 results
-│   │   └── batch_history.jsonl
-│   ├── PUZZLE_73/                # Puzzle 73 results
-│   │   └── batch_history.jsonl
-│   ├── reports/                  # Analysis reports
-│   ├── config.js                 # Configuration loader (.env support)
-│   ├── balance_verifier.js       # ⭐ Centralized balance verifier (reutilizável)
-│   ├── utils.js                  # CryptoEngine (ECDSA, SHA256, Base58Check)
-│   ├── solver.js                 # Main solver (uses balance_verifier)
-│   └── balance_checker.js        # Standalone balance checker
+├── config.js                     # ⭐ Centralized configuration loader (.env support)
+├── puzzle_solver.js              # ⭐ Bitcoin solver entry point
+├── puzzle_solver_ethereum.js     # Ethereum solver entry point
+├── puzzle_solver_solana.js       # Solana solver entry point
+├── puzzle_solver_polygon.js      # Polygon solver entry point
+├── puzzle_solver_bnb.js          # BNB solver entry point
 │
-├── ethereum/
+├── bitcoin/                      # Bitcoin modular project
+│   ├── cache/                    # Bitcoin state files (puzzle_71.json, etc.)
+│   ├── PUZZLE_71, 72, 73/        # Checked addresses log folders
+│   ├── config/                   # Solver configuration, main solver & balance verifier
+│   └── reports/                  # Standalone checkers report output
+│
+├── ethereum/                     # Ethereum modular project
 │   ├── cache/                    # Ethereum state files
-│   ├── candidates/               # Ethereum candidate addresses
-│   ├── PUZZLE_71/                # Puzzle 71 results
-│   │   └── batch_history.jsonl
-│   ├── PUZZLE_72/                # Puzzle 72 results
-│   │   └── batch_history.jsonl
-│   ├── PUZZLE_73/                # Puzzle 73 results
-│   │   └── batch_history.jsonl
-│   ├── reports/                  # Analysis reports
-│   ├── config.js                 # Configuration loader (.env support)
-│   ├── balance_verifier.js       # ⭐ Centralized balance verifier (reutilizável)
-│   ├── utils.js                  # CryptoEngine (ECDSA, Keccak256, EIP-55)
-│   ├── solver.js                 # Main solver (uses balance_verifier)
-│   └── balance_checker.js        # Standalone balance checker
+│   ├── PUZZLE_71, 72, 73/        # Checked addresses log folders
+│   ├── config/                   # Solver config, main solver & balance verifier
+│   └── reports/
+│
+├── solana/                       # Solana modular project
+│   ├── cache/                    # Solana state files
+│   ├── PUZZLE_71, 72, 73/        # Checked addresses log folders
+│   ├── config/                   # Solver config, main solver & balance verifier
+│   └── reports/
+│
+├── polygon/                      # Polygon modular project ⭐
+│   ├── cache/                    # Polygon state files
+│   ├── PUZZLE_71, 72, 73/        # Checked addresses log folders
+│   ├── config/                   # Solver config, main solver & balance verifier
+│   └── reports/
+│
+├── bnb/                          # BNB modular project ⭐
+│   ├── cache/                    # BNB state files
+│   ├── PUZZLE_71, 72, 73/        # Checked addresses log folders
+│   ├── config/                   # Solver config, main solver & balance verifier
+│   └── reports/
 │
 ├── relatorio_final/              # ⭐ Consolidated results
-│   └── saldos_encontrados.jsonl  # All found balances (unified output)
-│
+│   ├── bitcoin_addresses_with_balance.jsonl
+│   ├── ethereum_addresses_with_balance.jsonl
+│   ├── solana_addresses_with_balance.jsonl
+│   ├── polygon_addresses_with_balance.jsonl ⭐
+│   ├── bnb_addresses_with_balance.jsonl ⭐
+│   ├── saldos_encontrados.jsonl  # Solvers found balances output
+│   └── all_networks_consolidated.jsonl 🚀 # Consolidated python checking output
+```
 ├── puzzle_solver.js              # ⭐ Bitcoin validator (Blockbook/Ankr - high performance)
-├── puzze_solver_ethereum.js      # Ethereum entry point
+├── puzzle_solver_ethereum.js     # Ethereum entry point
+├── puzzle_solver_solana.js       # Solana entry point
+├── puzzle_solver_polygon.js      # Polygon entry point
+├── puzzle_solver_bnb.js          # BNB entry point
 ├── .env                          # ⭐ Configuration (variables for all scripts)
 ├── .env.example                  # Configuration template
 ├── run_all_puzzles.sh            # Run Bitcoin puzzles 71-73 parallel
 ├── run_all_puzzles_ethereum.sh   # Run Ethereum puzzles 71-73 parallel
+├── run_all_puzzles_solana.sh     # Run Solana puzzles 71-73 parallel
+├── run_all_puzzles_polygon.sh    # Run Polygon puzzles 71-73 parallel
+├── run_all_puzzles_bnb.sh        # Run BNB puzzles 71-73 parallel
+├── run_all_networks_all_puzzles.sh # MASTER: Todos os 5 networks / Todos os Puzzles 71,72,73 🚀
+├── run_all_networks_puzzle71.sh  # Executa Puzzle 71 em todas as 5 redes 🚀
+├── run_all_networks_puzzle72.sh  # Executa Puzzle 72 em todas as 5 redes 🚀
+├── run_all_networks_puzzle73.sh  # Executa Puzzle 73 em todas as 5 redes 🚀
 ├── run_dual_mode.sh              # Run Bitcoin + Ethereum simultaneously
 ├── setup_toolbox.sh              # Install Node.js dependencies
 ├── check_balance.sh              # Consolidated balance verification
@@ -329,108 +371,83 @@ uv run verify_all_balances.py
 
 ## 🔐 Core Modules
 
+### Centralized Config (`./config.js`)
+* **loadEnvFile & initializeConfig**: Parses the root `.env` file and populates `process.env` safely.
+* **Cascading priority**: Checks command-line flags first, then `.env`, and finally defaults.
+* **Strict Validation**: Validates addresses format (EIP-55 for EVM, Base58 for Solana/Bitcoin), API endpoint URLs, integer boundaries, and throws clear start-time errors.
+
 ### Bitcoin (`bitcoin/`)
-- **config.js** ⭐ NEW: Loads `.env` and exports `RUNTIME_CONFIG` + `BLOCKBOOK_CONFIG`
-  - Puzzle definitions, range limits (2^66 to 2^132)
-  - `.env` support with cascading priority
-  - BLOCKBOOK configuration for Ankr integration
-  
-- **balance_verifier.js** ⭐ NEW: Centralized balance verification
-  - Method: `verifyBalances(addresses, puzzleId)`
-  - Automatic alert on balance > 0
-  - Saves to consolidated `relatorio_final/saldos_encontrados.jsonl`
-  - Reutilizable by solver, balance_checker, and other modules
-
-- **utils.js**: CryptoEngine class
-  - `privkeyToAddress()` - ECDSA → SHA256 → RIPEMD160 → Base58Check
-  - `privkeyToWif()` - Wallet import format
-  - `generateRandomPrivkey()` - Range-bounded random generation
-  - `validatePrivkeyRange()` - Range validation
-  
-- **solver.js**: BitcoinSolver class (refactored to use balance_verifier)
-  - Batch processing (configurable via .env BATCH_SIZE)
-  - Uses centralized balance verification
-  - State persistence (resume capability)
-  - SIGINT handling (graceful shutdown)
-
-- **balance_checker.js**: Standalone balance verification
-  - Can run independently of solver
-  - Uses same centralized balance_verifier
-  - Reports saved to `bitcoin/reports/`
+* **config/config.js**: Loads custom Bitcoin runtime constants (ranges, Blockbook endpoints).
+* **config/balance_verifier.js**: Queries BTC address balance using Ankr Blockbook API.
+* **config/utils.js**: `CryptoEngine` handles ECDSA secp256k1 key pair math and generates WIF, compressed/uncompressed public keys, and BIP44, BIP49, BIP84, BIP86 address formats.
+* **config/solver.js**: Manages sequential/random search loops, saving intermediate state dynamically.
 
 ### Ethereum (`ethereum/`)
-- **config.js**: Loads `.env` and exports `RUNTIME_CONFIG`
-  - Puzzle definitions, range limits
-  - `.env` support with cascading priority
-  - Ankr RPC endpoint configuration
+* **config/config.js**: Ethereum constants and Ankr JSON-RPC API parameters.
+* **config/balance_verifier.js**: Uses Web3 JSON-RPC batching (`eth_getBalance`) for maximum performance.
+* **config/utils.js**: Converts private keys directly to Keccak256 checksummed Ethereum EIP-55 addresses.
+* **config/solver.js**: Orchestrates search candidates generation and verification loops.
 
-- **balance_verifier.js** ⭐ NEW: Centralized balance verification (Ethereum version)
-  - Method: `verifyBalances(addresses, puzzleId)`
-  - JSON-RPC batch support (10 addresses per batch)
-  - Automatic alert on balance > 0
-  - Saves to consolidated output
+### Solana (`solana/`)
+* **config/config.js**: Loads custom Solana variables and targets.
+* **config/balance_verifier.js**: Performs high-speed RPC `getBalance` batch queries.
+* **config/utils.js**: Uses native `ed25519` key derivation to map private keys to Solana Base58 addresses.
+* **config/solver.js**: High-performance solver loop that respects Helius RPC rate limit thresholds.
 
-- **utils.js**: CryptoEngine class
-  - `privkeyToAddress()` - ECDSA → Keccak256 → last 20 bytes → EIP-55 checksum
-  - `toChecksumAddress()` - EIP-55 checksum encoding
-  - `isValidAddress()` - Format validation
-  - `generateRandomPrivkey()` - Range-bounded random generation
-  - `validatePrivkeyRange()` - Range validation
-  
-- **solver.js**: EthereumSolver class (refactored to use balance_verifier)
-  - Batch processing (configurable via .env BATCH_SIZE)
-  - Uses centralized balance verification
-  - State persistence (resume capability)
-  - SIGINT handling (graceful shutdown)
+### Polygon (`polygon/`)
+* **config/config.js**: Loads Polygon targets (MATIC) and dRPC nodes parameters.
+* **config/balance_verifier.js**: Optimized JSON-RPC balancer interface using dRPC load-balancers.
+* **config/utils.js**: EVM candidate address generation with secure secp256k1 derivation.
+* **config/solver.js**: High-performance solver loop for Polygon network.
 
-- **balance_checker.js**: Standalone balance verification
-  - Can run independently of solver
-  - Uses same centralized balance_verifier
+### BNB Chain (`bnb/`)
+* **config/config.js**: Configuration loader for BNB Chain (BSC) targets.
+* **config/balance_verifier.js**: Connects with official BSC nodes and utilizes BscScan checker fallbacks.
+* **config/utils.js**: Derived EVM address verification matching BSC mainnet checksum standards.
+* **config/solver.js**: High-performance solver loop for BNB Chain.
 
-### Main Validators
-- **puzzle_solver.js** ⭐ NEW: High-performance Bitcoin validator
-  - Uses native Node.js Fetch API (v18+)
-  - Blockbook/Ankr integration for Bitcoin
-  - Rate limiting with automatic retry (429 handling)
-  - Supports 5 BIP formats simultaneously
-  - Clean, minimal implementation for high throughput
+### Main Validators & Solvers
+* **puzzle_solver.js**: High-performance Bitcoin validator with native Fetch API, Blockbook integration, and support for 5 BIP formats simultaneously.
+* **puzzle_solver_ethereum.js**: Bootstrapper for Ethereum.
+* **puzzle_solver_solana.js**: Bootstrapper for Solana (includes bigint-buffer monkeypatching).
+* **puzzle_solver_polygon.js**: Bootstrapper for Polygon.
+* **puzzle_solver_bnb.js**: Bootstrapper for BNB Chain.
 
 ## 🏗️ Architecture Overview
 
 ```
-┌─────────────────────────────────────────────────┐
-│              .env Configuration                 │
-│  (PUZZLE_ID, BATCH_SIZE, BLOCKBOOK_URL, etc)   │
-└────────────────────┬────────────────────────────┘
-                     │
-                     ▼
-    ┌───────────────────────────────────────────┐
-    │      bitcoin/config.js (loadEnv)          │
-    │      ethereum/config.js (loadEnv)         │
-    │  Exports: RUNTIME_CONFIG, BLOCKBOOK_CONFIG│
-    └────────────┬────────────────────────────┬─┘
-                 │                            │
-         ┌───────▼────────┐            ┌──────▼──────┐
-         │  puzzle_        │            │  Solvers    │
-         │  solver.js      │            │  (Fetch)    │
-         │  (Blockbook)    │            │             │
-         └────────┬────────┘            └──────┬──────┘
-                  │                           │
-                  └───────────┬────────────────┘
-                              │
-                              ▼
-              ┌──────────────────────────────────┐
-              │  balance_verifier.js              │
-              │  (Bitcoin + Ethereum)             │
-              │  Centralized validation           │
-              └──────────────────┬───────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────────┐
-                  │ relatorio_final/saldos_          │
-                  │ encontrados.jsonl                │
-                  │ (Unified output - all findings)  │
-                  └──────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                        .env Configuration                              │
+│ (PUZZLE_ID, BATCH_SIZE, RPC endpoints, delays, API keys, SEARCH_MODE)  │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+       ┌──────────────────────────────────────────────────────────┐
+       │             ./config.js (loadEnv & Validation)           │
+       │  Validates format and makes settings global/process.env   │
+       └────────────────────────────┬─────────────────────────────┘
+                                    │
+       ┌────────────────────────────┼────────────────────────────┐
+       ▼                            ▼                            ▼
+┌──────────────┐             ┌──────────────┐             ┌──────────────┐
+│  Bitcoin     │             │  Ethereum/EVM│             │  Solana      │
+│  Solver/Entry│             │  Solvers     │             │  Solver/Entry│
+│  (Ankr/Block)│             │  (Ankr RPC)  │             │  (Helius RPC)│
+└──────┬───────┘             └──────┬───────┘             └──────┬───────┘
+       │                            │                            │
+       └────────────────────────────┼────────────────────────────┘
+                                    │
+                                    ▼
+       ┌──────────────────────────────────────────────────────────┐
+       │             Centralized balance_verifier.js              │
+       │       Validates balances for generated keys locally       │
+       └────────────────────────────┬─────────────────────────────┘
+                                    │
+                                    ▼
+       ┌──────────────────────────────────────────────────────────┐
+       │           relatorio_final/saldos_encontrados.jsonl       │
+       │               (Unified output - all findings)            │
+       └──────────────────────────────────────────────────────────┘
 ```
 
 ## 📦 Dependencies
@@ -447,7 +464,7 @@ uv run verify_all_balances.py
 
 ## ✅ Features
 
-- ✓ **Modular architecture** - bitcoin/ and ethereum/ completely isolated
+- ✓ **Modular architecture** - 5 networks (bitcoin, ethereum, solana, polygon, bnb) completely isolated
 - ✓ **Centralized balance verification** - reusable `balance_verifier.js` modules
 - ✓ ⭐ **.env support** - single configuration file for all scripts
 - ✓ ⭐ **High-performance validator** - `puzzle_solver.js` with Blockbook/Ankr
@@ -457,33 +474,36 @@ uv run verify_all_balances.py
 - ✓ **Rate limiting** - automatic retry on 429 errors
 - ✓ **State persistence** - resume from last position after crash
 - ✓ **Parallel execution** - 7s offset between puzzles to avoid API overload
-- ✓ **Dual blockchain** - run Bitcoin and Ethereum simultaneously
+- ✓ **Multichain execution** - run all 5 networks in parallel
 - ✓ **Unified output** - `relatorio_final/saldos_encontrados.jsonl` consolidates all findings
 - ✓ **Alert system** - visual and audio alerts when balance found
 - ✓ **Keccak256 correct** - web3-utils for proper Ethereum address derivation
 - ✓ **EIP-55 checksum** - proper Ethereum address case sensitivity
 - ✓ **5 BIP formats** - Bitcoin support for BIP44, BIP49, BIP84, BIP86
 
-## 🎯 Puzzles
+## 🎯 Puzzles & Targets
 
 ### Puzzle 71
-- **Bitcoin**: `1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU`
-- **Ethereum**: `0x00000000219ab540356cBB839Cbe05303d7705Fa`
-- **Range**: 2^66 to 2^67
+* **Range**: `2^66` to `2^67`
+* **Bitcoin target**: `1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU`
+* **Ethereum / Polygon / BNB target**: `0x00000000219ab540356cBB839Cbe05303d7705Fa`
+* **Solana target**: `4ZJhPQAgUseCsWhKvJLTmmRRUV74fdoTpQLNfKoekbPY`
 
 ### Puzzle 72
-- **Bitcoin**: `1JTK7s9YVYywfm5XUH7RNhHJH1LshCaRFR`
-- **Ethereum**: `0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8`
-- **Range**: 2^67 to 2^68
+* **Range**: `2^67` to `2^68`
+* **Bitcoin target**: `1JTK7s9YVYywfm5XUH7RNhHJH1LshCaRFR`
+* **Ethereum / Polygon / BNB target**: `0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8`
+* **Solana target**: `9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM`
 
 ### Puzzle 73
-- **Bitcoin**: `12VVRNPi4SJqUTsp6FmqDqY5sGosDtysn4`
-- **Ethereum**: `0x40B38765696e3d5d8d9d834D8AaD4bB6e418E489`
-- **Range**: 2^68 to 2^69
+* **Range**: `2^68` to `2^69`
+* **Bitcoin target**: `12VVRNPi4SJqUTsp6FmqDqY5sGosDtysn4`
+* **Ethereum / Polygon / BNB target**: `0x40B38765696e3d5d8d9d834D8AaD4bB6e418E489`
+* **Solana target**: `7mhcgF1DVsj5iv4CxZDgp51H6MBBwqamsH1KnqXhSRc5`
 
 ## 📝 Notes
 
-- All files are created within their respective `bitcoin/` and `ethereum/` folders
+- All files are created within their respective network folders (e.g., `bitcoin/`, `ethereum/`, `solana/`, `polygon/`, `bnb/`)
 - No files are created in the root directory during execution
 - State files allow resuming from the last checked position
 - Logs are created in real-time for monitoring progress
@@ -492,7 +512,7 @@ uv run verify_all_balances.py
 ## 🆕 What's New in v4.0
 
 ### Centralized Balance Verification
-- New `balance_verifier.js` modules in both bitcoin/ and ethereum/
+- New `balance_verifier.js` modules in all five network directories
 - Reutilizable across solvers and balance_checkers
 - Automatic consolidation to `relatorio_final/saldos_encontrados.jsonl`
 - Unified alert system with visual and audio feedback
@@ -502,19 +522,20 @@ uv run verify_all_balances.py
 - Cascading priority: env vars > .env > defaults
 - No need to modify code to change settings
 - `.env.example` template included for reference
+- Centralized verification prevents command-line environment overrides from being ignored
 
-### High-Performance Bitcoin Validator
-- New `puzzle_solver.js` with native Fetch API
-- Blockbook/Ankr support for Bitcoin verification
+### High-Performance Multi-Network Solvers
+- New dedicated bootstrappers `puzzle_solver_solana.js`, `puzzle_solver_polygon.js`, and `puzzle_solver_bnb.js`
+- Custom RPC wrappers for Blockbook, Ankr, Helius, and dRPC load balancers
 - Automatic rate limit handling (429 retry with backoff)
 - Support for 5 Bitcoin BIP formats simultaneously (BIP44, BIP49, BIP84, BIP86)
 
-### Architecture Improvements
+### Architecture & Scripting Improvements
 - Clean delegation pattern between modules
-- No code duplication between Bitcoin/Ethereum
+- Parallelization scripts for individual puzzle IDs (`run_all_networks_puzzle71.sh`, etc.) and all puzzles consolidated (`run_all_networks_all_puzzles.sh`)
 - Modular, testable components
 - Better error handling and structured logging
-- Unified output format for all findings
+- Unified output formats for all findings across all 5 networks
 
 ### Summary of Changes
 | Component | v3.0 | v4.0 |

@@ -51,7 +51,12 @@ export async function validateRpcEndpoint(network, rpcUrl, puzzleId) {
     }, 3000);
     
     const response = await axios.post(rpcUrl, testUrl, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'Puzzle-Solver-Client/1.0',
+        'Connection': 'keep-alive'
+      },
       timeout: 3000,
     });
     

@@ -26,18 +26,20 @@ if [ -f ".env" ]; then
 fi
 
 export SEARCH_MODE="${SEARCH_MODE:-sequential}"
+export POLYGON_DELAY_MS=2500
+echo "⏱️  Delay do Polygon ajustado para 2.5s para execução paralela segura"
 
 echo "🔍 Polygon: P71 P72 P73 (${SEARCH_MODE})"
 
 (PUZZLE_ID=71 node polygon/config/solver.js) &
 PID71=$!
 
-sleep 7
+sleep 20
 
 (PUZZLE_ID=72 node polygon/config/solver.js) &
 PID72=$!
 
-sleep 7
+sleep 20
 
 (PUZZLE_ID=73 node polygon/config/solver.js) &
 PID73=$!

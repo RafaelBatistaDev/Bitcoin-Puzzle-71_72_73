@@ -24,6 +24,7 @@ https://www.ankr.com/rpc
 toolbox create puzzle-solver
 toolbox enter puzzle-solver
 
+
 # Executar baixar dependençias
 ./setup_toolbox.sh
 
@@ -32,14 +33,35 @@ toolbox enter puzzle-solver
 
 ## 🎯 Rodar Solvers
 
-### **OPÇÃO 1: Rodar todos os 5 networks em paralelo (RECOMENDADO)**
+### **OPÇÃO 1: Rodar todos os 5 networks (Todos os Puzzles 71, 72, 73 em paralelo)**
 ```bash
-./run_all_networks.sh
+./run_all_networks_all_puzzles.sh
 ```
+
 ✅ Executa Bitcoin + Ethereum + Solana + Polygon + BNB  
 ✅ 15 puzzles (3×5) rodando ao mesmo tempo  
 ✅ Gera `batch_history.jsonl` em cada `PUZZLE_*`  
 ⏱️ Tempo: ~1-2 horas (depende da velocidade do RPC e CPU)
+
+---
+
+### **OPÇÃO 2: Rodar todos os 5 networks em paralelo (Puzzles Específicos)**
+Para rodar apenas um puzzle específico em todas as 5 redes simultaneamente:
+
+#### Rodar apenas o Puzzle 71 nas 5 redes
+```bash
+./run_all_networks_puzzle71.sh
+```
+
+#### Rodar apenas o Puzzle 72 nas 5 redes
+```bash
+./run_all_networks_puzzle72.sh
+```
+
+#### Rodar apenas o Puzzle 73 nas 5 redes
+```bash
+./run_all_networks_puzzle73.sh
+```
 
 ---
 
@@ -220,7 +242,10 @@ uv run check_bnb.py
 ├── run_all_puzzles_solana.sh           # Solana: P71, P72, P73
 ├── run_all_puzzles_polygon.sh          # Polygon: P71, P72, P73 ⭐
 ├── run_all_puzzles_bnb.sh              # BNB: P71, P72, P73 ⭐
-├── run_all_networks.sh                 # MASTER: Todos os 5 em paralelo 🚀
+├── run_all_networks_all_puzzles.sh     # MASTER: Todos os 5 networks / Todos os Puzzles 71,72,73 🚀
+├── run_all_networks_puzzle71.sh        # Executa Puzzle 71 em todas as 5 redes 🚀
+├── run_all_networks_puzzle72.sh        # Executa Puzzle 72 em todas as 5 redes 🚀
+├── run_all_networks_puzzle73.sh        # Executa Puzzle 73 em todas as 5 redes 🚀
 │
 ├── check_bitcoin.py                    # Bitcoin checker
 ├── check_ethereum.py                   # Ethereum checker
@@ -275,8 +300,11 @@ uv run check_bnb.py
 ### **Execução Completa (SIMPLES)**
 
 ```bash
-# 1. Rodar todos os solvers
-./run_all_networks.sh
+# 1. Rodar todos os solvers e puzzles
+./run_all_networks_all_puzzles.sh
+
+# Ou rodar apenas um puzzle específico em todas as redes (ex: Puzzle 72)
+# ./run_all_networks_puzzle72.sh
 
 # 2. Verificar todos os resultados
 uv run check_all_networks.py
@@ -379,7 +407,10 @@ uv --version
 
 | Tarefa | Comando |
 |--------|---------|
-| **Rodar tudo** | `./run_all_networks.sh` |
+| **Rodar todos os puzzles** | `./run_all_networks_all_puzzles.sh` |
+| **Rodar Puzzle 71 em todas redes** | `./run_all_networks_puzzle71.sh` |
+| **Rodar Puzzle 72 em todas redes** | `./run_all_networks_puzzle72.sh` |
+| **Rodar Puzzle 73 em todas redes** | `./run_all_networks_puzzle73.sh` |
 | **Verificar tudo** | `uv run check_all_networks.py` |
 | **Ver consolidado** | `cat relatorio_final/all_networks_consolidated.jsonl` |
 | **Rodar Polygon** | `./run_all_puzzles_polygon.sh` |
@@ -390,6 +421,6 @@ uv --version
 ---
 
 **⭐ Networks Novos: Polygon e BNB**  
-**🚀 Scripts Master: run_all_networks.sh e check_all_networks.py**
+**🚀 Scripts Master: run_all_networks_all_puzzles.sh e check_all_networks.py**
 
 Criado: 5 de junho de 2026

@@ -26,6 +26,8 @@ if [ -f ".env" ]; then
 fi
 
 export SEARCH_MODE="${SEARCH_MODE:-sequential}"
+export BTC_PUBLIC_API_DELAY_MS=4000
+echo "⏱️  Delay do Bitcoin ajustado para 4s para execução paralela segura"
 
 echo "🔍 Bitcoin: P71 P72 P73 (${SEARCH_MODE})"
 

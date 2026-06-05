@@ -26,18 +26,20 @@ if [ -f ".env" ]; then
 fi
 
 export SEARCH_MODE="${SEARCH_MODE:-sequential}"
+export SOL_DELAY_MS=1500
+echo "⏱️  Delay do Solana ajustado para 1.5s para execução paralela segura"
 
 echo "🔍 Solana: P71 P72 P73 (${SEARCH_MODE})"
 
 (PUZZLE_ID=71 node solana/config/solver.js) &
 PID71=$!
 
-sleep 7
+sleep 20
 
 (PUZZLE_ID=72 node solana/config/solver.js) &
 PID72=$!
 
-sleep 7
+sleep 20
 
 (PUZZLE_ID=73 node solana/config/solver.js) &
 PID73=$!
