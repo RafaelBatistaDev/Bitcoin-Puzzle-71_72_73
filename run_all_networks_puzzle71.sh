@@ -77,7 +77,7 @@ test_api_bnb() {
 }
 
 test_api_solana() {
-  local url="${SOLANA_RPC_ENDPOINT:-https://api.mainnet-beta.solana.com}"
+  local url="${SOL_RPC_ENDPOINT:-https://api.mainnet-beta.solana.com}"
   echo -n "  🔗 Solana RPC... "
   if curl -s -m 5 -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "User-Agent: Puzzle-Solver/1.0" \
     -d '{"jsonrpc":"2.0","method":"getHealth","params":[],"id":1}' "$url" > /dev/null 2>&1; then

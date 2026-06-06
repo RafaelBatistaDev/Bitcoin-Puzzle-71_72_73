@@ -25,7 +25,7 @@ console.log('\n╔════════════════════�
 console.log('║  🚀 ETHEREUM PUZZLE SOLVER - Iniciando                     ║');
 console.log('╚════════════════════════════════════════════════════════════╝\n');
 
-const puzzleId = RUNTIME_CONFIG.PUZZLE_ID;
+const puzzleId = Number(config.PUZZLE_ID || RUNTIME_CONFIG.PUZZLE_ID);
 const searchMode = RUNTIME_CONFIG.SEARCH_MODE || 'sequential';
 
 if (![71, 72, 73].includes(puzzleId)) {

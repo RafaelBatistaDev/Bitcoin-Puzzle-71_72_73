@@ -268,13 +268,8 @@ export function validateConfig() {
   // ========================================
   // ETHEREUM CONFIGURATION
   // ========================================
-  const ethUrl = isValidUrl(process.env.RPC_ENDPOINT, 'RPC_ENDPOINT (Ethereum)');
-  if (!ethUrl.valid) errors.push(ethUrl.error);
-
-  if (process.env.ETHERSCAN_KEY && process.env.ETHERSCAN_KEY !== 'YourApiKeyToken') {
-    const ethKey = isValidApiKey(process.env.ETHERSCAN_KEY, 'ETHERSCAN_KEY');
-    if (!ethKey.valid) errors.push(ethKey.error);
-  }
+  const ethKey = isValidApiKey(process.env.ETHERSCAN_KEY, 'ETHERSCAN_KEY');
+  if (!ethKey.valid) errors.push(ethKey.error);
 
   const ETH_TARGET_71 = isValidAddress(
     process.env.ETH_TARGET_71,

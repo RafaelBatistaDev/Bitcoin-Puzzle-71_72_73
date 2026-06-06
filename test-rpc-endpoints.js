@@ -15,16 +15,16 @@ import { RUNTIME_CONFIG as ETH_CONFIG } from './ethereum/config/config.js';
 import { RUNTIME_CONFIG as POLYGON_CONFIG } from './polygon/config/config.js';
 import { RUNTIME_CONFIG as BNB_CONFIG } from './bnb/config/config.js';
 import { RUNTIME_CONFIG as SOLANA_CONFIG } from './solana/config/config.js';
-import { BLOCKBOOK_CONFIG as BTC_CONFIG } from './bitcoin/config/config.js';
+import { RUNTIME_CONFIG as BTC_CONFIG } from './bitcoin/config/config.js';
 
 console.log('\n🧪 TESTE: Cada Solver Consulta a Rede Correta\n');
 console.log('═'.repeat(70));
 
 // Teste 1: Ethereum
 console.log('\n✅ ETHEREUM Solver:');
-console.log(`   RPC Endpoint: ${ETH_CONFIG.RPC_ENDPOINT}`);
-console.log(`   Contém "eth"? ${ETH_CONFIG.RPC_ENDPOINT.includes('eth') ? '✅ SIM' : '❌ NÃO'}`);
-console.log(`   Target: ${ETH_CONFIG.RPC_ENDPOINT.includes('ankr') ? '🔗 Ankr' : '🔗 Outro'}`);
+console.log(`   API Endpoint: ${ETH_CONFIG.RPC_ENDPOINT}`);
+console.log(`   Contém "etherscan"? ${ETH_CONFIG.RPC_ENDPOINT.includes('etherscan') ? '✅ SIM' : '❌ NÃO'}`);
+console.log(`   Etherscan API Key: ${ETH_CONFIG.ETHERSCAN_KEY ? '✔️ Configurada' : '❌ NÃO Configurada'}`);
 
 // Teste 2: Polygon
 console.log('\n✅ POLYGON Solver:');
@@ -48,9 +48,8 @@ console.log(`   Target: ${SOLANA_CONFIG.RPC_ENDPOINT.includes('ankr') ? '🔗 An
 
 // Teste 5: Bitcoin
 console.log('\n✅ BITCOIN Solver:');
-console.log(`   Blockbook URL: ${BTC_CONFIG.API_URL}`);
-console.log(`   Contém "blockbook_btc"? ${BTC_CONFIG.API_URL.includes('blockbook_btc') ? '✅ SIM' : '❌ NÃO'}`);
-console.log(`   Target: ${BTC_CONFIG.API_URL.includes('ankr') ? '🔗 Ankr' : '🔗 Outro'}`);
+console.log(`   API URL: ${BTC_CONFIG.BLOCKCHAIN_INFO_BASE_URL}`);
+console.log(`   Contém "blockchain"? ${BTC_CONFIG.BLOCKCHAIN_INFO_BASE_URL.includes('blockchain') ? '✅ SIM' : '❌ NÃO'}`);
 
 console.log('\n' + '═'.repeat(70));
 
@@ -60,7 +59,7 @@ console.log('\n📊 RESUMO FINAL:');
 const checks = [
   {
     name: 'Ethereum',
-    pass: ETH_CONFIG.RPC_ENDPOINT.includes('eth') && ETH_CONFIG.RPC_ENDPOINT.includes('ankr'),
+    pass: ETH_CONFIG.RPC_ENDPOINT.includes('etherscan') && ETH_CONFIG.ETHERSCAN_KEY && ETH_CONFIG.ETHERSCAN_KEY !== 'YourApiKeyToken',
   },
   {
     name: 'Polygon',
@@ -76,7 +75,7 @@ const checks = [
   },
   {
     name: 'Bitcoin',
-    pass: BTC_CONFIG.API_URL.includes('blockbook_btc') && BTC_CONFIG.API_URL.includes('ankr'),
+    pass: BTC_CONFIG.BLOCKCHAIN_INFO_BASE_URL.includes('blockchain'),
   },
 ];
 

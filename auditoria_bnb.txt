@@ -1,0 +1,53 @@
+
+╔════════════════════════════════════════════════════════════╗
+║          AUDITORIA DE REDE BNB - BSCSCAN & RPC             ║
+╚════════════════════════════════════════════════════════════╝
+
+══════════════════════════════════════════════════════════════════════
+📡 1. CARREGANDO CONFIGURAÇÕES DO ARQUIVO .ENV
+══════════════════════════════════════════════════════════════════════
+  BscScan API Url: https://api.etherscan.io/v2/api
+  BNB RPC Endpoint: https://bsc-dataseed.binance.org
+  BscScan Key: 8GS74K... (Tamanho: 34)
+  Alvos (Targets):
+    - Puzzle 71: 0x00000000219ab540356cBB839Cbe05303d7705Fa
+    - Puzzle 72: 0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8
+    - Puzzle 73: 0x40B38765696e3d5d8d9d834D8AaD4bB6e418E489
+  ✔ Configurações importadas com sucesso!
+
+══════════════════════════════════════════════════════════════════════
+📡 2. TESTE DE CONECTIVIDADE COM BSCSCAN API E RPC
+══════════════════════════════════════════════════════════════════════
+  ✔ Conectado com sucesso à API BscScan!
+  Latência BscScan: 421.21 ms
+  ✔ Conectado com sucesso ao BNB RPC Node!
+  Altura do Bloco RPC: 102682877
+  Latência RPC: 770.02 ms
+
+══════════════════════════════════════════════════════════════════════
+📡 3. AUDITORIA DE FUNÇÕES DE SALDO (BALANCEMULTI)
+══════════════════════════════════════════════════════════════════════
+  ✘ balancemulti falhou: NOTOK - Free API access is not supported for this chain. Please upgrade your api plan for full chain coverage. https://etherscan.io/apis
+
+══════════════════════════════════════════════════════════════════════
+📡 4. VERIFICAÇÃO DE SALDO DOS ENDEREÇOS DOS PUZZLES (BSCSCAN)
+══════════════════════════════════════════════════════════════════════
+  ⚠️  Pulando verificação de puzzles via BscScan porque o teste de saldo falhou.
+
+══════════════════════════════════════════════════════════════════════
+📡 4B. VERIFICAÇÃO DE SALDO DOS PUZZLES VIA BNB RPC (BATCH)
+══════════════════════════════════════════════════════════════════════
+  Puzzle 71 (0x00000000...): 1.06831014 BNB
+  Puzzle 72 (0xBE0eB53F...): 17195730.37025867 BNB
+  Puzzle 73 (0x40B38765...): 0.00168599 BNB
+
+╔════════════════════════════════════════════════════════════╗
+║                   RESUMO DA AUDITORIA                      ║
+╚════════════════════════════════════════════════════════════╝
+  • Latência BscScan: 421.21 ms
+  • Latência BNB RPC: 770.02 ms
+  • API BscScan Key: FALHA/Rejeitada
+  • BNB RPC Node: OPERACIONAL
+
+✓ Auditoria de Rede BNB concluída com sucesso!
+

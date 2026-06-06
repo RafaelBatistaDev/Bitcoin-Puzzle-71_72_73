@@ -22,7 +22,7 @@ console.log('\n╔════════════════════�
 console.log('║  🚀 BITCOIN PUZZLE SOLVER - Iniciando                      ║');
 console.log('╚════════════════════════════════════════════════════════════╝\n');
 
-const puzzleId = RUNTIME_CONFIG.PUZZLE_ID;
+const puzzleId = Number(config.PUZZLE_ID || RUNTIME_CONFIG.PUZZLE_ID);
 
 if (![71, 72, 73].includes(puzzleId)) {
   console.error('❌ Puzzle inválido! Deve ser 71, 72 ou 73');

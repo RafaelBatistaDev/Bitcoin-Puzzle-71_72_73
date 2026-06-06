@@ -139,10 +139,7 @@ function initializeConfig() {
     const BLOCKBOOK_TIMEOUT_MS = process.env.BLOCKBOOK_TIMEOUT_MS ? isValidInteger(process.env.BLOCKBOOK_TIMEOUT_MS, 'BLOCKBOOK_TIMEOUT_MS', 1) : 10000;
 
     // Validar Ethereum
-    isValidUrl(process.env.RPC_ENDPOINT, 'RPC_ENDPOINT (Ethereum)');
-    if (process.env.ETHERSCAN_KEY && process.env.ETHERSCAN_KEY !== 'YourApiKeyToken') {
-      isValidApiKey(process.env.ETHERSCAN_KEY, 'ETHERSCAN_KEY');
-    }
+    isValidApiKey(process.env.ETHERSCAN_KEY, 'ETHERSCAN_KEY');
     isValidAddress(process.env.ETH_TARGET_71, 'ETH_TARGET_71', 'ethereum');
     isValidAddress(process.env.ETH_TARGET_72, 'ETH_TARGET_72', 'ethereum');
     isValidAddress(process.env.ETH_TARGET_73, 'ETH_TARGET_73', 'ethereum');
@@ -201,7 +198,7 @@ function initializeConfig() {
       BLOCKBOOK_TIMEOUT_MS,
       
       // Ethereum
-      RPC_ENDPOINT: process.env.RPC_ENDPOINT,
+      RPC_ENDPOINT: 'https://api.etherscan.io/v2/api',
       ETHERSCAN_KEY: process.env.ETHERSCAN_KEY,
       ETH_TARGET_71: process.env.ETH_TARGET_71,
       ETH_TARGET_72: process.env.ETH_TARGET_72,
