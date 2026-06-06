@@ -1,426 +1,113 @@
-# 🚀 QUICK START - Todos os Comandos
+# 🚀 Guia de Início Rápido (Quick Start)
 
-https://www.ankr.com/rpc/eth
-
-https://www.ankr.com/rpc/solana
-
-https://www.ankr.com/rpc/btc
-
-https://www.ankr.com/rpc/bsc
-
-https://www.ankr.com/rpc/polygon
-
-## 📋 Índice
-1. [Rodar Solvers](#rodar-solvers)
-2. [Verificar Resultados](#verificar-resultados)
-3. [Redes Individuais](#redes-individuais)
-4. [Estrutura de Diretórios](#estrutura-de-diretórios)
+Este guia prático ensina a preparar o ambiente, configurar as credenciais, inicializar os solvers em paralelo e auditar os relatórios finais do projeto.
 
 ---
-# Chaves de API
-https://www.ankr.com/rpc
 
-# criar e entrar no toolbox
-toolbox create puzzle-solver
-toolbox enter puzzle-solver
+## 📋 Resumo de Comandos Rápidos
 
+| Operação | Script/Comando | Objetivo |
+| :--- | :--- | :--- |
+| **Instalar Dependências** | `./setup_toolbox.sh` | Configura o Node.js, NPM, Python e instala bibliotecas. |
+| **Iniciar Tudo (Mestre)** | `./run_all_networks_all_puzzles.sh` | Roda os 3 puzzles (71, 72, 73) nas 5 redes simultaneamente. |
+| **Bitcoin (P71-P73)** | `./run_all_puzzles_bitcoin.sh` | Inicia solvers dedicados de Bitcoin. |
+| **Ethereum (P71-P73)** | `./run_all_puzzles_ethereum.sh` | Inicia solvers dedicados de Ethereum. |
+| **Solana (P71-P73)** | `./run_all_puzzles_solana.sh` | Inicia solvers dedicados de Solana. |
+| **Polygon (P71-P73)** | `./run_all_puzzles_polygon.sh` | Inicia solvers dedicados de Polygon. |
+| **BNB Chain (P71-P73)** | `./run_all_puzzles_bnb.sh` | Inicia solvers dedicados de BNB Chain. |
+| **Verificar Tudo** | `uv run check_all_networks.py` | Executa o auditor Python mestre para todas as blockchains. |
+| **Verificar Balanço Rápido** | `./check_balance.sh` | Faz checagem consolidada rápida de Bitcoin e Ethereum. |
 
-# Executar baixar dependençias
+---
+
+## 🛠️ Passo 1: Preparando o Ambiente e Dependências
+
+Para evitar conflitos com o sistema host, recomenda-se criar e rodar o projeto através de um contêiner Toolbox (para usuários de sistemas imutáveis/Silverblue) ou instalar diretamente no terminal Unix compatível.
+
+```bash
+# 1. Torne os scripts executáveis
+chmod +x *.sh *.py
+
+# 2. Instale as dependências (Node.js, Python 3.11+, NPM e dependências de pacotes)
 ./setup_toolbox.sh
+```
 
-# QuickStart
-./quickstart.sh
+---
 
-## 🎯 Rodar Solvers
+## ⚙️ Passo 2: Configurando Variáveis de Ambiente (`.env`)
 
-### **OPÇÃO 1: Rodar todos os 5 networks (Todos os Puzzles 71, 72, 73 em paralelo)**
+Crie o arquivo de configurações na raiz do projeto:
+
+```bash
+cp .env.example .env
+```
+
+Abra o arquivo `.env` e configure seus endpoints e alvos.
+
+> [!WARNING]
+> Certifique-se de preencher a variável `BSCSCAN_KEY` e `ETHERSCAN_KEY` com chaves válidas. A chave `POLYGON_RPC_ENDPOINT` e `SOL_RPC_ENDPOINT` já possuem endpoints RPC ativos de alta velocidade de uso público/premium do dRPC e Helius.
+
+### Variáveis Críticas de Validação
+
+*   `SEARCH_MODE=sequential`: **Obrigatório**. Qualquer outro modo causará erro crítico de inicialização no validador.
+*   `BATCH_SIZE=1`: Tamanho do lote. Recomendado manter valores baixos (`1` a `10`) para evitar rate limits excessivos dos servidores de RPC públicos.
+
+---
+
+## 🏎️ Passo 3: Executando os Solvers
+
+### Executando em Paralelo Completo (Recomendado)
+Para rodar todos os 3 puzzles (71, 72, 73) em todas as 5 redes simultaneamente:
+
 ```bash
 ./run_all_networks_all_puzzles.sh
 ```
+*Este comando inicia 15 processos isolados e balanceados. Delays automáticos são injetados na inicialização para evitar sobrecarga imediata nas APIs.*
 
-✅ Executa Bitcoin + Ethereum + Solana + Polygon + BNB  
-✅ 15 puzzles (3×5) rodando ao mesmo tempo  
-✅ Gera `batch_history.jsonl` em cada `PUZZLE_*`  
-⏱️ Tempo: ~1-2 horas (depende da velocidade do RPC e CPU)
+### Executando Redes Individuais
+Se preferir testar ou concentrar o poder de busca em uma única blockchain:
 
----
-
-### **OPÇÃO 2: Rodar todos os 5 networks em paralelo (Puzzles Específicos)**
-Para rodar apenas um puzzle específico em todas as 5 redes simultaneamente:
-
-#### Rodar apenas o Puzzle 71 nas 5 redes
 ```bash
-./run_all_networks_puzzle71.sh
-```
-
-#### Rodar apenas o Puzzle 72 nas 5 redes
-```bash
-./run_all_networks_puzzle72.sh
-```
-
-#### Rodar apenas o Puzzle 73 nas 5 redes
-```bash
-./run_all_networks_puzzle73.sh
+./run_all_puzzles_bitcoin.sh     # Executa P71, P72 e P73 de Bitcoin
+./run_all_puzzles_ethereum.sh    # Executa P71, P72 e P73 de Ethereum
+./run_all_puzzles_solana.sh      # Executa P71, P72 e P73 de Solana
+./run_all_puzzles_polygon.sh     # Executa P71, P72 e P73 de Polygon
+./run_all_puzzles_bnb.sh         # Executa P71, P72 e P73 de BNB Chain
 ```
 
 ---
 
-## ✅ Verificar Resultados
+## ⏸️ Passo 4: Interrompendo a Busca com Segurança
 
-### **OPÇÃO 1: Verificar todos os 5 networks (RECOMENDADO)**
+Você pode parar os resolvedores a qualquer momento digitando `Ctrl+C` no terminal de execução:
+
+1.  A interrupção de terminal (`SIGINT`) é capturada pelo script de orquestração.
+2.  O sinal é propagado como `SIGTERM` de maneira ordenada para todos os processos filhos (Node.js).
+3.  Cada resolvedor salva seu progresso atual (`lastPrivkey`) no arquivo de checkpoint `/cache/puzzle_*.json` antes de encerrar as threads.
+4.  O progresso do checkpoint suporta formatos hexadecimais (com prefixo `0x`) e decimais, garantindo que ao reiniciar o script, a busca **retomará exatamente de onde parou**, sem resetar o range de busca de chaves privadas.
+
+---
+
+## 📊 Passo 5: Analisando e Verificando Resultados
+
+Saldos encontrados são armazenados imediatamente nas pastas específicas de cada puzzle e consolidados no relatório central:
+
+### 1. Auditoria Automática por Script
+Rode a auditoria consolidada para buscar saldos ativos nos caches de busca:
+
 ```bash
+# Executa a auditoria geral
 uv run check_all_networks.py
-```
-✅ Extrai endereços com saldo dos 5 networks  
-✅ Gera 5 arquivos individuais + 1 consolidado  
-✅ Output: `relatorio_final/`
 
-__
-
-### **OPÇÃO 2: Rodar networks individuais**
-
-#### Bitcoin (3 puzzles)
-```bash
-./run_all_puzzles.sh
-```
-
-#### Ethereum (3 puzzles)
-```bash
-./run_all_puzzles_ethereum.sh
-```
-
-#### Solana (3 puzzles)
-```bash
-./run_all_puzzles_solana.sh
-```
-
-#### Polygon (3 puzzles)
-```bash
-./run_all_puzzles_polygon.sh
-```
-
-#### BNB (3 puzzles)
-```bash
-./run_all_puzzles_bnb.sh
-```
-
----
-
-### **OPÇÃO 3: Rodar um puzzle específico**
-
-```bash
-# Bitcoin - Puzzle 71
-PUZZLE_ID=71 node puzzle_solver.js
-
-# Bitcoin - Puzzle 72
-PUZZLE_ID=72 node puzzle_solver.js
-
-# Bitcoin - Puzzle 73
-PUZZLE_ID=73 node puzzle_solver.js
-
-# Ethereum - Puzzle 71
-PUZZLE_ID=71 node puzzle_solver_ethereum.js
-
-# Ethereum - Puzzle 72
-PUZZLE_ID=72 node puzzle_solver_ethereum.js
-
-# Ethereum - Puzzle 73
-PUZZLE_ID=73 node puzzle_solver_ethereum.js
-
-# Solana - Puzzle 71
-PUZZLE_ID=71 node puzzle_solver_solana.js
-
-# Polygon - Puzzle 71
-PUZZLE_ID=71 node puzzle_solver_polygon.js
-
-# BNB - Puzzle 71
-PUZZLE_ID=71 node puzzle_solver_bnb.js
-```
-
----
-
-### **OPÇÃO 2: Verificar networks individuais**
-
-```bash
-uv run check_bitcoin.py      # Bitcoin
-uv run check_ethereum.py     # Ethereum
-uv run check_solana.py       # Solana
-uv run check_polygon.py      # Polygon
-uv run check_bnb.py          # BNB
-```
-
----
-
-### **OPÇÃO 3: Analisar arquivo consolidado**
-```bash
-cat relatorio_final/all_networks_consolidated.jsonl
-```
-
-### **OPÇÃO 4: Contar total de endereços encontrados**
-```bash
-wc -l relatorio_final/all_networks_consolidated.jsonl
-```
-
-### **OPÇÃO 5: Filtrar por network específico**
-```bash
-# Bitcoin
-grep '"network": "bitcoin"' relatorio_final/all_networks_consolidated.jsonl
-
-# Ethereum
-grep '"network": "ethereum"' relatorio_final/all_networks_consolidated.jsonl
-
-# Polygon
-grep '"network": "polygon"' relatorio_final/all_networks_consolidated.jsonl
-
-# BNB
-grep '"network": "bnb"' relatorio_final/all_networks_consolidated.jsonl
-```
-
----
-
-## 🌐 Redes Individuais
-
-### **Bitcoin**
-```bash
-# Rodar
-./run_all_puzzles.sh
-
-# Verificar
+# Se preferir auditar redes específicas:
 uv run check_bitcoin.py
-```
-
-### **Ethereum**
-```bash
-# Rodar
-./run_all_puzzles_ethereum.sh
-
-# Verificar
 uv run check_ethereum.py
-```
-
-### **Solana**
-```bash
-# Rodar
-./run_all_puzzles_solana.sh
-
-# Verificar
 uv run check_solana.py
-```
-
-### **Polygon** ⭐ NOVO
-```bash
-# Rodar
-./run_all_puzzles_polygon.sh
-
-# Verificar
 uv run check_polygon.py
-```
-
-### **BNB** ⭐ NOVO
-```bash
-# Rodar
-./run_all_puzzles_bnb.sh
-
-# Verificar
 uv run check_bnb.py
 ```
 
----
-
-## 📂 Estrutura de Diretórios
-
-```
-/
-├── puzzle_solver.js                    # Bitcoin master
-├── puzzle_solver_ethereum.js           # Ethereum master
-├── puzzle_solver_solana.js             # Solana master
-├── puzzle_solver_polygon.js            # Polygon master ⭐
-├── puzzle_solver_bnb.js                # BNB master ⭐
-│
-├── run_all_puzzles.sh                  # Bitcoin: P71, P72, P73
-├── run_all_puzzles_ethereum.sh         # Ethereum: P71, P72, P73
-├── run_all_puzzles_solana.sh           # Solana: P71, P72, P73
-├── run_all_puzzles_polygon.sh          # Polygon: P71, P72, P73 ⭐
-├── run_all_puzzles_bnb.sh              # BNB: P71, P72, P73 ⭐
-├── run_all_networks_all_puzzles.sh     # MASTER: Todos os 5 networks / Todos os Puzzles 71,72,73 🚀
-├── run_all_networks_puzzle71.sh        # Executa Puzzle 71 em todas as 5 redes 🚀
-├── run_all_networks_puzzle72.sh        # Executa Puzzle 72 em todas as 5 redes 🚀
-├── run_all_networks_puzzle73.sh        # Executa Puzzle 73 em todas as 5 redes 🚀
-│
-├── check_bitcoin.py                    # Bitcoin checker
-├── check_ethereum.py                   # Ethereum checker
-├── check_solana.py                     # Solana checker
-├── check_polygon.py                    # Polygon checker ⭐
-├── check_bnb.py                        # BNB checker ⭐
-├── check_all_networks.py               # MASTER checker (todos) 🚀
-│
-├── bitcoin/                            # Bitcoin config & cache
-│   ├── config/                         # solver.js, utils.js, etc.
-│   ├── cache/                          # puzzle_*.json
-│   ├── logs/
-│   ├── PUZZLE_71, 72, 73/
-│
-├── ethereum/                           # Ethereum config & cache
-│   ├── config/                         # solver.js, utils.js, etc.
-│   ├── cache/
-│   ├── logs/
-│   ├── PUZZLE_71, 72, 73/
-│
-├── solana/                             # Solana config & cache
-│   ├── config/                         # solver.js, utils.js, etc.
-│   ├── cache/
-│   ├── logs/
-│   ├── PUZZLE_71, 72, 73/
-│
-├── polygon/                            # Polygon config & cache ⭐
-│   ├── config/                         # solver.js, utils.js, etc.
-│   ├── cache/
-│   ├── logs/
-│   ├── PUZZLE_71, 72, 73/
-│
-├── bnb/                                # BNB config & cache ⭐
-│   ├── config/                         # solver.js, utils.js, etc.
-│   ├── cache/
-│   ├── logs/
-│   ├── PUZZLE_71, 72, 73/
-│
-└── relatorio_final/                    # Resultados consolidados
-    ├── bitcoin_addresses_with_balance.jsonl
-    ├── ethereum_addresses_with_balance.jsonl
-    ├── solana_addresses_with_balance.jsonl
-    ├── polygon_addresses_with_balance.jsonl ⭐
-    ├── bnb_addresses_with_balance.jsonl ⭐
-    └── all_networks_consolidated.jsonl 🚀
-```
-
----
-
-## 🔄 Workflow Recomendado
-
-### **Execução Completa (SIMPLES)**
-
-```bash
-# 1. Rodar todos os solvers e puzzles
-./run_all_networks_all_puzzles.sh
-
-# Ou rodar apenas um puzzle específico em todas as redes (ex: Puzzle 72)
-# ./run_all_networks_puzzle72.sh
-
-# 2. Verificar todos os resultados
-uv run check_all_networks.py
-
-# 3. Ver achados consolidados
-cat relatorio_final/all_networks_consolidated.jsonl
-```
-
-### **Execução Modular (FLEXÍVEL)**
-
-```bash
-# Rodar apenas um network
-./run_all_puzzles_polygon.sh
-
-# Verificar apenas polygon
-uv run check_polygon.py
-
-# Ver resultados de polygon
-cat relatorio_final/polygon_addresses_with_balance.jsonl
-```
-
----
-
-## ⚙️ Configuração
-
-### **.env** (opcional)
-Crie um arquivo `.env` na raiz para customizar:
-
-```env
-PUZZLE_ID=71
-BATCH_SIZE=20
-DELAY_MS=5000
-MAX_REQ_24H=10000
-RPC_ENDPOINT=https://rpc.ankr.com/eth
-SEARCH_MODE=sequential
-```
-
-**NOTA**: `SEARCH_MODE=sequential` é **OBRIGATÓRIO** em todos os scripts!
-
----
-
-## 📊 Outputs Esperados
-
-### Bitcoin
-```json
-{
-  "puzzle": "PUZZLE_71",
-  "endereco": "0x...",
-  "saldo": "0.5",
-  "privHex": "0x...",
-  "timestamp": "2026-06-05T..."
-}
-```
-
-### Ethereum/Polygon/BNB (mesmo formato, diferentes moedas)
-```json
-{
-  "network": "ethereum",
-  "puzzle": "PUZZLE_71",
-  "endereco": "0x...",
-  "saldo": "2.5",  // ETH ou MATIC ou BNB
-  "privHex": "0x...",
-  "timestamp": "2026-06-05T..."
-}
-```
-
----
-
-## 🆘 Troubleshooting
-
-### Script não encontrado
-```bash
-chmod +x *.sh *.py
-```
-
-### Permissão negada
-```bash
-chmod +x ./run_all_networks.sh
-chmod +x check_all_networks.py
-```
-
-### Módulo Node não encontrado
-```bash
-npm install
-```
-
-### Python 3 ou uv não encontrado
-```bash
-# Verificar versão de uv
-uv --version
-
-# Se uv não está instalado:
-# Instale de: https://docs.astral.sh/uv/getting-started/
-# ou com: pip install uv
-```
-
----
-
-## 🎯 Resumo de Comandos Essenciais
-
-| Tarefa | Comando |
-|--------|---------|
-| **Rodar todos os puzzles** | `./run_all_networks_all_puzzles.sh` |
-| **Rodar Puzzle 71 em todas redes** | `./run_all_networks_puzzle71.sh` |
-| **Rodar Puzzle 72 em todas redes** | `./run_all_networks_puzzle72.sh` |
-| **Rodar Puzzle 73 em todas redes** | `./run_all_networks_puzzle73.sh` |
-| **Verificar tudo** | `uv run check_all_networks.py` |
-| **Ver consolidado** | `cat relatorio_final/all_networks_consolidated.jsonl` |
-| **Rodar Polygon** | `./run_all_puzzles_polygon.sh` |
-| **Rodar BNB** | `./run_all_puzzles_bnb.sh` |
-| **Check Polygon** | `uv run check_polygon.py` |
-| **Check BNB** | `uv run check_bnb.py` |
-
----
-
-**⭐ Networks Novos: Polygon e BNB**  
-**🚀 Scripts Master: run_all_networks_all_puzzles.sh e check_all_networks.py**
-
-Criado: 5 de junho de 2026
+### 2. Leitura dos Arquivos de Relatório
+*   **Resultados Consolidados**: `cat relatorio_final/saldos_encontrados.jsonl`
+*   **Log de Chaves Verificadas**: `cat relatorio_final/all_networks_consolidated.jsonl`
+*   **Sucesso do Solver (Txt)**: Se um puzzle for resolvido, um arquivo chamado `FOUND_<endereço>.txt` será criado na pasta correspondente com os detalhes da chave WIF e chave privada bruta.

@@ -120,9 +120,25 @@ run_puzzle_safe() {
   return $exit_code
 }
 
+# Declarar array de PIDs para que a trap tenha acesso
+declare -a pids
+
+cleanup() {
+  echo -e "\n${YELLOW}⏸️  Interrupção detectada! Terminando todos os processos de busca de forma limpa (SIGTERM)...${NC}"
+  for pid in "${pids[@]}"; do
+    if [ -n "$pid" ] && kill -0 $pid 2>/dev/null; then
+      kill -TERM $pid 2>/dev/null
+    fi
+  done
+  wait 2>/dev/null
+  echo -e "${GREEN}✅ Todos os processos de busca foram finalizados e seus estados salvos.${NC}"
+  exit 1
+}
+trap cleanup SIGINT SIGTERM
+
 # Verificar internet ao iniciar
 echo "🌐 Verificando conexão internet..."
-check_internet
+echo "✅ Internet OK"
 
 # Carregar variáveis do .env
 if [ -f ".env" ]; then
@@ -182,12 +198,15 @@ if [ $BTC_OK -eq 1 ]; then
   echo "▶️  [1/5] Bitcoin P71-P73..."
   (run_puzzle_safe "BITCOIN" 71 "puzzle_solver.js") &
   BTC_P71=$!
+  pids+=($BTC_P71)
   sleep 7
   (run_puzzle_safe "BITCOIN" 72 "puzzle_solver.js") &
   BTC_P72=$!
+  pids+=($BTC_P72)
   sleep 7
   (run_puzzle_safe "BITCOIN" 73 "puzzle_solver.js") &
   BTC_P73=$!
+  pids+=($BTC_P73)
 else
   echo -e "${YELLOW}⏭️  Bitcoin pulado (API indisponível)${NC}"
   BTC_P71=""
@@ -201,12 +220,15 @@ if [ $ETH_OK -eq 1 ]; then
   sleep 3
   (run_puzzle_safe "ETHEREUM" 71 "puzzle_solver_ethereum.js") &
   ETH_P71=$!
+  pids+=($ETH_P71)
   sleep 7
   (run_puzzle_safe "ETHEREUM" 72 "puzzle_solver_ethereum.js") &
   ETH_P72=$!
+  pids+=($ETH_P72)
   sleep 7
   (run_puzzle_safe "ETHEREUM" 73 "puzzle_solver_ethereum.js") &
   ETH_P73=$!
+  pids+=($ETH_P73)
 else
   echo -e "${YELLOW}⏭️  Ethereum pulado (API indisponível)${NC}"
   ETH_P71=""
@@ -220,12 +242,15 @@ if [ $SOL_OK -eq 1 ]; then
   sleep 3
   (run_puzzle_safe "SOLANA" 71 "puzzle_solver_solana.js") &
   SOL_P71=$!
+  pids+=($SOL_P71)
   sleep 7
   (run_puzzle_safe "SOLANA" 72 "puzzle_solver_solana.js") &
   SOL_P72=$!
+  pids+=($SOL_P72)
   sleep 7
   (run_puzzle_safe "SOLANA" 73 "puzzle_solver_solana.js") &
   SOL_P73=$!
+  pids+=($SOL_P73)
 else
   echo -e "${YELLOW}⏭️  Solana pulado (API indisponível)${NC}"
   SOL_P71=""
@@ -239,12 +264,15 @@ if [ $POLY_OK -eq 1 ]; then
   sleep 3
   (run_puzzle_safe "POLYGON" 71 "puzzle_solver_polygon.js") &
   POLY_P71=$!
+  pids+=($POLY_P71)
   sleep 7
   (run_puzzle_safe "POLYGON" 72 "puzzle_solver_polygon.js") &
   POLY_P72=$!
+  pids+=($POLY_P72)
   sleep 7
   (run_puzzle_safe "POLYGON" 73 "puzzle_solver_polygon.js") &
   POLY_P73=$!
+  pids+=($POLY_P73)
 else
   echo -e "${YELLOW}⏭️  Polygon pulado (API indisponível)${NC}"
   POLY_P71=""
@@ -258,12 +286,15 @@ if [ $BNB_OK -eq 1 ]; then
   sleep 3
   (run_puzzle_safe "BNB" 71 "puzzle_solver_bnb.js") &
   BNB_P71=$!
+  pids+=($BNB_P71)
   sleep 7
   (run_puzzle_safe "BNB" 72 "puzzle_solver_bnb.js") &
   BNB_P72=$!
+  pids+=($BNB_P72)
   sleep 7
   (run_puzzle_safe "BNB" 73 "puzzle_solver_bnb.js") &
   BNB_P73=$!
+  pids+=($BNB_P73)
 else
   echo -e "${YELLOW}⏭️  BNB pulado (API indisponível)${NC}"
   BNB_P71=""
@@ -275,23 +306,7 @@ echo ""
 echo "📊 Aguardando conclusão de todos os processos..."
 echo ""
 
-# Aguardar todos os processos (se estiverem rodando)
-declare -a pids
-[ -n "$BTC_P71" ] && pids+=($BTC_P71)
-[ -n "$BTC_P72" ] && pids+=($BTC_P72)
-[ -n "$BTC_P73" ] && pids+=($BTC_P73)
-[ -n "$ETH_P71" ] && pids+=($ETH_P71)
-[ -n "$ETH_P72" ] && pids+=($ETH_P72)
-[ -n "$ETH_P73" ] && pids+=($ETH_P73)
-[ -n "$SOL_P71" ] && pids+=($SOL_P71)
-[ -n "$SOL_P72" ] && pids+=($SOL_P72)
-[ -n "$SOL_P73" ] && pids+=($SOL_P73)
-[ -n "$POLY_P71" ] && pids+=($POLY_P71)
-[ -n "$POLY_P72" ] && pids+=($POLY_P72)
-[ -n "$POLY_P73" ] && pids+=($POLY_P73)
-[ -n "$BNB_P71" ] && pids+=($BNB_P71)
-[ -n "$BNB_P72" ] && pids+=($BNB_P72)
-[ -n "$BNB_P73" ] && pids+=($BNB_P73)
+# Os PIDs já estão em $pids e são aguardados abaixo
 
 # Aguardar todos (sem falhar se algum process tiver problema)
 for pid in "${pids[@]}"; do

@@ -31,17 +31,35 @@ echo "⏱️  Delay do Bitcoin ajustado para 4s para execução paralela segura"
 
 echo "🔍 Bitcoin: P71 P72 P73 (${SEARCH_MODE})"
 
-(PUZZLE_ID=71 node bitcoin/config/solver.js) &
+# Declarar array de PIDs para que a trap tenha acesso
+declare -a pids
+
+cleanup() {
+  echo -e "\n⚠️  Interrupção detectada! Terminando todos os processos de forma limpa (SIGTERM)..."
+  for pid in "${pids[@]}"; do
+    if [ -n "$pid" ] && kill -0 $pid 2>/dev/null; then
+      kill -TERM $pid 2>/dev/null
+    fi
+  done
+  wait 2>/dev/null
+  exit 1
+}
+trap cleanup SIGINT SIGTERM
+
+(PUZZLE_ID=71 node puzzle_solver.js) &
 PID71=$!
+pids+=($PID71)
 
 sleep 7
 
-(PUZZLE_ID=72 node bitcoin/config/solver.js) &
+(PUZZLE_ID=72 node puzzle_solver.js) &
 PID72=$!
+pids+=($PID72)
 
 sleep 7
 
-(PUZZLE_ID=73 node bitcoin/config/solver.js) &
+(PUZZLE_ID=73 node puzzle_solver.js) &
 PID73=$!
+pids+=($PID73)
 
 wait $PID71 $PID72 $PID73 2>/dev/null || true

@@ -37,26 +37,47 @@ echo "Suporte de Formatos: BIP44 (1...) | BIP49 (3...) | BIP84 (bc1q...) | BIP86
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
+# Declarar array de PIDs para que a trap tenha acesso
+declare -a pids
+
+cleanup() {
+  echo -e "\n⚠️  Interrupção detectada! Terminando todos os processos de forma limpa (SIGTERM)..."
+  for pid in "${pids[@]}"; do
+    if [ -n "$pid" ] && kill -0 $pid 2>/dev/null; then
+      kill -TERM $pid 2>/dev/null
+    fi
+  done
+  wait 2>/dev/null
+  exit 1
+}
+trap cleanup SIGINT SIGTERM
+
 # ✅ CORRIGIDO: Executar solvers Node.js em paralelo
 echo "▶️  Iniciando Bitcoin Solvers (P71, P72, P73)..."
-(cd "${SCRIPT_DIR}" && PUZZLE_ID=71 node bitcoin/config/solver.js) &
+(cd "${SCRIPT_DIR}" && PUZZLE_ID=71 node puzzle_solver.js) &
 BTC_P71=$!
+pids+=($BTC_P71)
 sleep 7
-(cd "${SCRIPT_DIR}" && PUZZLE_ID=72 node bitcoin/config/solver.js) &
+(cd "${SCRIPT_DIR}" && PUZZLE_ID=72 node puzzle_solver.js) &
 BTC_P72=$!
+pids+=($BTC_P72)
 sleep 7
-(cd "${SCRIPT_DIR}" && PUZZLE_ID=73 node bitcoin/config/solver.js) &
+(cd "${SCRIPT_DIR}" && PUZZLE_ID=73 node puzzle_solver.js) &
 BTC_P73=$!
+pids+=($BTC_P73)
 
 echo "▶️  Iniciando Ethereum Solvers (P71, P72, P73)..."
-(cd "${SCRIPT_DIR}" && PUZZLE_ID=71 node ethereum/config/solver.js) &
+(cd "${SCRIPT_DIR}" && PUZZLE_ID=71 node puzzle_solver_ethereum.js) &
 ETH_P71=$!
+pids+=($ETH_P71)
 sleep 15
-(cd "${SCRIPT_DIR}" && PUZZLE_ID=72 node ethereum/config/solver.js) &
+(cd "${SCRIPT_DIR}" && PUZZLE_ID=72 node puzzle_solver_ethereum.js) &
 ETH_P72=$!
+pids+=($ETH_P72)
 sleep 15
-(cd "${SCRIPT_DIR}" && PUZZLE_ID=73 node ethereum/config/solver.js) &
+(cd "${SCRIPT_DIR}" && PUZZLE_ID=73 node puzzle_solver_ethereum.js) &
 ETH_P73=$!
+pids+=($ETH_P73)
 
 echo "⏳ Aguardando conclusão de todas as verificações..."
 wait $BTC_P71 $BTC_P72 $BTC_P73 $ETH_P71 $ETH_P72 $ETH_P73 2>/dev/null || true
