@@ -41,7 +41,7 @@ A tabela a seguir resume os parâmetros e endpoints de rede configurados e ativo
 *   **Provedor**: [Etherscan API REST V2](https://etherscan.io/)
 *   **Configuração**:
     *   `ETH_RPC_ENDPOINT`: `https://api.etherscan.io/v2/api`
-    *   `ETHERSCAN_KEY`: `8GS74KI7YYVW3M5V5WZ4SGJHHU85HA6JTX`
+    *   `ETHERSCAN_KEY`: `Sua Chave`
     *   `ETH_DELAY_MS`: `200`
     *   `ETH_TIMEOUT_MS`: `10000`
 *   **Endereços Alvo (Targets)**:
@@ -56,7 +56,7 @@ A tabela a seguir resume os parâmetros e endpoints de rede configurados e ativo
 *   **Finalidade**: Verificação de endereços Solana derivados em base58 (criptografia ed25519).
 *   **Provedor**: [Helius RPC](https://helius.dev/)
 *   **Configuração**:
-    *   `SOL_RPC_ENDPOINT`: `https://mainnet.helius-rpc.com/?api-key=c4127e39-e917-407f-8259-d2e5c6471a7c`
+    *   `SOL_RPC_ENDPOINT`: `https://mainnet.helius-rpc.com/?api-key=Sua Chave`
     *   `SOL_DELAY_MS`: `110`
     *   `SOL_TIMEOUT_MS`: `3000`
 *   **Endereços Alvo (Targets)**:
@@ -70,8 +70,8 @@ A tabela a seguir resume os parâmetros e endpoints de rede configurados e ativo
 *   **Finalidade**: Verificação secundária de rede EVM utilizando dRPC Nodes balanceados.
 *   **Provedor**: [dRPC Nodes](https://drpc.org/)
 *   **Configuração**:
-    *   `POLYGON_RPC_ENDPOINT`: `https://lb.drpc.org/ogrpc?network=polygon&dkey=AjCW_JETQkJriSlwdzqDWISeITOjYOwR8Zqu7sA_udJz`
-    *   `POLYGON_API_KEY`: `https://lb.drpc.org/ogrpc?network=polygon&dkey=AjCW_JETQkJriSlwdzqDWISeITOjYOwR8Zqu7sA_udJz`
+    *   `POLYGON_RPC_ENDPOINT`: `https://lb.drpc.org/ogrpc?network=polygon&dkey=Sua Chave`
+    *   `POLYGON_API_KEY`: `https://lb.drpc.org/ogrpc?network=polygon&dkey=Sua Chave`
     *   `POLYGON_DELAY_MS`: `300`
     *   `POLYGON_TIMEOUT_MS`: `5000`
 *   **Endereços Alvo (Targets)**:
@@ -84,7 +84,7 @@ A tabela a seguir resume os parâmetros e endpoints de rede configurados e ativo
 *   **Provedor**: [Binance Dataseed RPC](https://bsc-dataseed.binance.org) e [BscScan API](https://bscscan.com/)
 *   **Configuração**:
     *   `BNB_RPC_ENDPOINT`: `https://bsc-dataseed.binance.org`
-    *   `BSCSCAN_KEY`: `8GS74KI7YYVW3M5V5WZ4SGJHHU85HA6JTX`
+    *   `BSCSCAN_KEY`: `Sua Chave`
     *   `BNB_DELAY_MS`: `200`
     *   `BNB_TIMEOUT_MS`: `10000`
 *   **Endereços Alvo (Targets)**:
