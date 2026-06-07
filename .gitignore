@@ -89,5 +89,8 @@ github-bare/
 state.json
 # Abra o .gitignore existente e adicione as seguintes linhas no final:
 bitcoin/PUZZLE_71/addresses_checked.jsonl
+# Adicione ao final do .gitignore deste projeto:
+*_checked.jsonl
+*.jsonl
 *.tar.gz
 *.zst
