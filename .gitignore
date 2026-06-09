@@ -77,7 +77,6 @@ Cofre Pessoal/
 HEAD
 FETCH_HEAD
 ORIG_HEAD
-config
 description
 objects/
 refs/
@@ -91,6 +90,5 @@ state.json
 bitcoin/PUZZLE_71/addresses_checked.jsonl
 # Adicione ao final do .gitignore deste projeto:
 *_checked.jsonl
-*.jsonl
 *.tar.gz
 *.zst
