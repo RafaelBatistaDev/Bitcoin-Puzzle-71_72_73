@@ -308,7 +308,12 @@ def mempool_address_url(base_url: str, addr: str) -> str:
     return f"{root}/api/address/{addr}"
 
 
-def query_bitcoin_balance(base_url: str, addr: str, timeout: float) -> dict[str, Any]:
+def query_bitcoin_balance(
+    base_url: str,
+    addr: str,
+    timeout: float,
+    env: dict[str, str] | None = None,
+) -> dict[str, Any]:
     """
     Consulta saldo Bitcoin usando a mesma lógica do solver.js.
 
